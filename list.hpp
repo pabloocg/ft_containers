@@ -6,6 +6,152 @@
 namespace ft
 {
 
+template <typename T>
+class iterator_list
+{
+    public:
+
+        typedef T                   value_type;
+        typedef Node<value_type>    node_type;
+        typedef value_type &        reference;
+
+    private:
+        node_type  *pointer;
+    
+    public:
+        iterator_list(void): pointer(nullptr) {};
+        iterator_list(node_type *point): pointer(point) {};
+        iterator_list(iterator_list  const &other): pointer(other.get_pointer()) {};
+        virtual ~iterator_list() {};
+
+        node_type   *get_pointer() const
+        {
+            return (this->pointer);
+        }
+
+        void        set_pointer(node_type *ptr)
+        {
+            this->pointer = ptr;
+        }
+
+        iterator_list& operator++ ()
+        {
+            this->pointer = this->pointer->node_next();
+            return (*this);
+        };
+
+        iterator_list operator++ (int)
+        {
+            iterator_list   tmp(*this);
+            this->pointer = this->pointer->node_next();
+            return (tmp);
+        };
+
+        iterator_list& operator-- ()
+        {
+            this->pointer = this->pointer->node_previous();
+            return (*this);
+        };
+
+        iterator_list operator-- (int)
+        {
+            iterator_list   tmp(*this);
+            this->pointer = this->pointer->node_previous();
+            return (tmp);
+        };
+
+        reference operator* ()
+        {
+            return (this->pointer->node_value());
+        };
+
+        iterator_list& operator= (const iterator_list & other)
+        {
+            this->pointer = other.get_pointer();
+            return (*this);
+        };
+
+        
+        iterator_list   operator+ (int val)
+        {
+            iterator_list   tmp(*this);
+
+            for (int i = 0; i < val; i++)
+            {
+                tmp.set_pointer(tmp.get_pointer()->node_next());
+                if (tmp.get_pointer()->node_next() == nullptr)
+                    break ;
+            }
+            return (tmp);
+        };
+
+        iterator_list   operator- (int val)
+        {
+            iterator_list   tmp(*this);
+
+            for (int i = 0; i < val; i++)
+            {
+                tmp.set_pointer(tmp.get_pointer()->node_previous());
+                if (tmp.get_pointer()->node_previous() == nullptr)
+                    break ;
+            }
+            return (tmp);
+        };
+
+        iterator_list&   operator+= (int val)
+        {
+            for (int i = 0; i < val; i++)
+            {
+                this->pointer = this->pointer->node_next();
+                if (this->pointer->node_next() == nullptr)
+                    break ;
+            }
+            return (*this);
+        };
+
+        iterator_list&   operator-= (int val)
+        {
+            for (int i = 0; i < val; i++)
+            {
+                this->pointer = this->pointer->node_previous();
+                if (this->pointer->node_previous() == nullptr)
+                    break ;
+            }
+            return (*this);
+        };
+
+        bool operator== (const iterator_list & other)
+        {
+            return (this->pointer == other.get_pointer());
+        };
+
+        bool operator!= (const iterator_list & other)
+        {
+            return (this->pointer != other.get_pointer());
+        };
+
+        bool operator>= (const iterator_list & other)
+        {
+            return (this->pointer >= other.get_pointer());
+        };
+
+        bool operator<= (const iterator_list & other)
+        {
+            return (this->pointer <= other.get_pointer());
+        };
+
+        bool operator< (const iterator_list & other)
+        {
+            return (this->pointer < other.get_pointer());
+        };
+
+        bool operator> (const iterator_list & other)
+        {
+            return (this->pointer > other.get_pointer());
+        };
+
+};
+
 template <typename T, class Alloc = std::allocator<T> >
 class list
 {
@@ -21,8 +167,8 @@ class list
         typedef value_type const            &   const_reference;
         typedef value_type                  *   pointer;
         typedef value_type const            *   const_pointer;
-        //typedef typename std::list<T, allocator_type>::iterator                      iterator;
-        //typedef typename std::list<T, allocator_type>::const_iterator                const_iterator;
+        typedef iterator_list<value_type>       iterator;
+        typedef iterator_list<value_type> const const_iterator;
         //typedef typename std::list<T, allocator_type>::reverse_iterator              reverse_iterator;
         //typedef typename std::list<T, allocator_type>::const_reverse_iterator        const_reverse_iterator;
         typedef std::ptrdiff_t                  difference_type;
@@ -37,6 +183,13 @@ class list
         void    init_list()
         {
             this->n_end = new node_type();
+            this->n_begin = this->n_end;
+        }
+
+        void    reset()
+        {
+            this->n_end->connect_next(nullptr);
+            this->n_end->connect_previous(nullptr);
             this->n_begin = this->n_end;
         }
 
@@ -68,27 +221,42 @@ class list
         };
 
         /*Constructor copy from other list*/
-        //list (const list& x);
+        list (const list& x): n_begin(nullptr), n_end(nullptr), list_size(0)
+        {
+            this->init_list();
+            this->assign(x.cbegin(), x.cend());
+        };
 
                     /*         Destructor           */
 
         virtual ~list(void)
         {
             this->clear();
-            delete this->n_end;
+            if (this->n_end)
+                delete this->n_end;
         };
 
                     /*          Operators           */
 
-        //list& operator= (const list& x);
+        list& operator= (const list& x)
+        {
+            this->assign(x.cbegin(), x.cend());
+            return (*this);
+        };
 
                     /*          Iterators           */
 
         /*Return iterator to beginning*/
-        //iterator begin();
+        iterator begin()
+        {
+            return (iterator(this->n_begin));
+        };
 
         /*Return iterator to end*/
-        //iterator end();
+        iterator end()
+        {
+            return (iterator(this->n_end));
+        };
 
         /*Return reverse iterator to reverse beginning*/
         //reverse_iterator rbegin();
@@ -97,10 +265,16 @@ class list
         //reverse_iterator rend();
 
         /*Return const_iterator to beginning*/
-        //const_iterator cbegin() const;
+        const_iterator cbegin() const
+        {
+            return (const_iterator(this->n_begin));
+        };
 
         /*Return const_iterator to end*/
-        //const_iterator cend() const;
+        const_iterator cend() const
+        {
+            return (const_iterator(this->n_end));
+        };
 
         /*Return const_reverse_iterator to reverse beginning*/
         //const_reverse_iterator crbegin() const;
@@ -126,7 +300,8 @@ class list
         /*Return maximum size*/
         size_type max_size() const
         {
-            return std::max<size_type>(std::numeric_limits<difference_type >::min(), std::numeric_limits<difference_type >::max());
+            return std::max<size_type>(std::numeric_limits<difference_type >::min(),
+                                std::numeric_limits<difference_type >::max());
         };
 
 
@@ -149,13 +324,13 @@ class list
 
         /*Assign new content to container*/
                 //Assigns new contents to the list container, replacing its current contents, and modifying its size accordingly.
-        template <class InputIterator>
-        void assign (InputIterator first, InputIterator last)
+        void assign (iterator first, iterator last)
         {
             this->clear();
-            for (; first != last; first++)
+            for (; first != last; ++first)
                 this->push_back(*first);
         };
+
         void assign (size_type n, const value_type& val)
         {
             this->clear();
@@ -170,7 +345,7 @@ class list
             if (this->empty())
                 this->n_end->insert_before(tmp);
             else
-                this->n_begin->insert_before(new node_type(val));
+                this->n_begin->insert_before(tmp);
             this->n_begin = tmp;
             this->list_size++;
         };
@@ -209,17 +384,67 @@ class list
         };
 
         /*Insert elements*/
-        //iterator insert (iterator position, const value_type& val);
-        //void insert (iterator position, size_type n, const value_type& val);
-        //template <class InputIterator>
-        //void insert (iterator position, InputIterator first, InputIterator last);
+        iterator insert (iterator position, const value_type& val)
+        {
+            if (position.get_pointer()->node_previous() == nullptr)
+            {
+                this->push_front(val);
+                return (this->begin());
+            }
+            else
+            {
+                position.get_pointer()->insert_before(new node_type(val));
+                this->list_size++;
+                return (iterator(position.get_pointer()->node_previous()));
+            }
+        };
+
+        void insert (iterator position, size_type n, const value_type& val)
+        {
+            for (size_t i = 0; i < n; i++) this->insert(position, val);
+        };
+
+        void insert (iterator position, iterator first, iterator last)
+        {
+            for (; first != last; ++first) this->insert(position, *first);
+        };
 
         /*Erase elements*/
-        //iterator erase (iterator position);
-        //iterator erase (iterator first, iterator last);
+        iterator erase (iterator position)
+        {
+            if (position.get_pointer()->node_previous() == nullptr)
+            {
+                this->pop_front();
+                return (this->begin());
+            }
+            else if (position.get_pointer()->node_next() == nullptr)
+            {
+                this->pop_back();
+                return (iterator(this->n_end->node_previous()));
+            }
+            position.get_pointer()->node_previous()->connect_next(position.get_pointer()->node_next());
+            position.get_pointer()->node_next()->connect_previous(position.get_pointer()->node_previous());
+            node_type *tmp = position.get_pointer()->node_next();
+            free(position.get_pointer());
+            this->list_size--;
+            return (iterator(tmp));
+        };
+        
+        iterator erase (iterator first, iterator last)
+        {
+            iterator tmp;
+
+            for (; first != last; ++first) tmp = this->erase(first);
+            return (tmp);
+        };
 
         /*Swap content with other list*/
-        //void swap (list& x);
+        void swap (list& x)
+        {
+            list<value_type> tmp(x);
+            x.assign(this->begin(), this->end());
+            *this = tmp;
+        };
 
         /*Change size*/
         void resize (size_type n, value_type val = value_type())
@@ -233,17 +458,12 @@ class list
         };
 
         /*Clear list*/
-            //Removes all elements from the list container (which are destroyed), and leaving the container with a size of 0.
+        //Removes all elements from the list container (which are destroyed), and leaving the container with a size of 0.
         void clear()
         {
             if (this->empty())
                 return ;
-            while (this->n_begin)
-            {
-                node_type *tmp = this->n_begin->node_next();
-                free(this->n_begin);
-                this->n_begin = tmp;
-            }
+            this->erase(this->begin(), this->end());
             this->list_size = 0;
             this->init_list();
         };
@@ -252,9 +472,36 @@ class list
                     /*              Operations                */
 
         /*Transfer elements from list to list*/
-        //void splice (iterator position, list& x);
-        //void splice (iterator position, list& x, iterator i);
-        //void splice (iterator position, list& x, iterator first, iterator last);
+        void splice (iterator position, list& x)
+        {
+            this->splice(position, x, x.begin(), x.end());
+        };
+
+        void splice (iterator position, list& x, iterator i)
+        {
+            iterator iend = i;
+            this->splice(position, x, i, ++iend);
+        };
+
+        void splice (iterator position, list& x, iterator first, iterator last)
+        {
+            node_type *tmp;
+
+            while (first != last)
+            {
+                tmp = first++.get_pointer();
+                if (tmp == x.n_begin)
+                    x.n_begin = tmp->node_next();
+                tmp->leave_node();
+                position.get_pointer()->insert_before(tmp);
+                if (position.get_pointer() == this->n_begin)
+                    this->n_begin = tmp;
+                this->list_size++;
+                x.list_size--;
+            }
+            if (x.empty())
+                x.reset();
+        };
 
         /*Remove elements with specific value*/
         //void remove (const value_type& val);

@@ -25,6 +25,16 @@ class Node
         Node(const m_node &other): previous(other->node_previous()), value(other->node_value()), next(other->node_next()) {};
         virtual ~Node() {};
 
+        void        leave_node()
+        {
+            if (this->previous)
+                this->previous->next = this->next;
+            if (this->next)
+                this->next->previous = this->previous;
+            this->previous = nullptr;
+            this->next = nullptr;
+        }
+
         value_type  &node_value(void)
         {
             return (this->value);
