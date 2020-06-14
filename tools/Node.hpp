@@ -86,6 +86,25 @@ class Node
             new_node->previous = this;
             this->next = new_node;
         }
+
+        void    swap(m_node other_node)
+        {
+            m_node tmp;
+
+            tmp = other_node;
+            other_node->next = this->next;
+            other_node->previous = this->previous;
+            this->previous = tmp->previous;
+            this->next = tmp->next;
+        }
+
+        m_node& operator= (const m_node & other)
+        {
+            this->value = other->node_value();
+            this->next = other->node_next();
+            this->previous = other->node_previous();
+            return (*this);
+        };
 };
 
 }

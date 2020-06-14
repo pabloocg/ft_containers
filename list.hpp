@@ -1,7 +1,9 @@
 #ifndef LIST_HPP
 # define LIST_HPP
 # include "tools/Node.hpp"
+# include "tools/algorithm.hpp"
 # include <limits>
+
 
 namespace ft
 {
@@ -412,15 +414,15 @@ class list
         /*Erase elements*/
         iterator erase (iterator position)
         {
-            if (position.get_pointer()->node_previous() == nullptr)
+            if (position.get_pointer() == this->n_begin)
             {
                 this->pop_front();
                 return (this->begin());
             }
-            else if (position.get_pointer()->node_next() == nullptr)
+            else if (position.get_pointer()->node_next() == this->n_end)
             {
                 this->pop_back();
-                return (iterator(this->n_end->node_previous()));
+                return (this->end());
             }
             position.get_pointer()->node_previous()->connect_next(position.get_pointer()->node_next());
             position.get_pointer()->node_next()->connect_previous(position.get_pointer()->node_previous());
@@ -504,26 +506,119 @@ class list
         };
 
         /*Remove elements with specific value*/
-        //void remove (const value_type& val);
+        void remove (const value_type& val)
+        {
+            iterator it = this->begin();
+            iterator save;
+
+            while (it != this->end())
+            {
+                save = it + 1;
+                if (*it == val)
+                    this->erase(it);
+                it = save;
+            }
+            if (this->empty())
+                this->reset();
+        };
 
         /*Remove elements fulfilling condition*/
-        //template <class Predicate>
-        //void remove_if (Predicate pred);
+        template <class Predicate>
+        void remove_if (Predicate pred)
+        {
+            iterator it = this->begin();
+            iterator save;
+
+            while (it != this->end())
+            {
+                save = it + 1;
+                if (pred(*it))
+                    this->erase(it);
+                it = save;
+            }
+            if (this->empty())
+                this->reset();
+        };
 
         /*Remove duplicate values*/
-        //void unique();
-        //template <class BinaryPredicate>
-        //void unique (BinaryPredicate binary_pred);
+        void unique(void)
+        {
+            this->unique(equal<value_type>);
+        };
+
+        template <class BinaryPredicate>
+        void unique (BinaryPredicate binary_pred)
+        {
+            iterator it = this->begin();
+            iterator next = it + 1;
+
+            while (it != this->end())
+            {
+                if (binary_pred(*it, *next))
+                    this->erase(next);
+                else
+                    it = next;
+                if (++next == this->end())
+                    it = next;
+            }
+        };
 
         /*Merge sorted lists*/
-        //void merge (list& x);
-        //template <class Compare>
-        //void merge (list& x, Compare comp);
+        void merge (list& x)
+        {
+            this->splice(iterator(this->n_end->node_previous()), x, x.begin(), x.end());
+        };
+
+        template <class Compare>
+        void merge (list& x, Compare comp)
+        {
+            iterator it = this->begin();
+            iterator itl = x.begin();
+
+            while (it != this->end())
+            {
+                if (comp(*it, *itl))
+                {
+                    this->splice(it, x, itl++);
+                    it = this->begin();
+                }
+                else
+                {
+                    if (it.get_pointer()->node_next() == this->end().get_pointer())
+                    {
+                        this->splice(it, x, itl++);
+                        it = this->begin();
+                    }
+                    else
+                        it++;
+                }
+                if (it.get_pointer()->node_next() == this->end().get_pointer() && itl.get_pointer()->node_next() != x.end().get_pointer())
+                    it = this->begin();
+            }
+        };
 
         /*Sort elements in container*/
-        //void sort();
-        //template <class Compare>
-        //void sort (Compare comp);
+        void sort()
+        {
+            this->sort(less<value_type>);
+        };
+
+        template <class Compare>
+        void sort (Compare comp)
+        {
+            for (iterator it = this->begin(); it != this->end(); it++)
+            {
+                for (iterator it2 = this->begin(); it2 != this->end(); it2++)
+                {
+                    if (comp(*it, *it2))
+                    {
+                        it.get_pointer()->swap(it2.get_pointer());
+                        if (it == this->begin())
+                            this->n_begin = it2.get_pointer();
+                    }
+                }
+            }
+        };
 
         /*Reverses the order of the elements in the list container.*/
         //void reverse();

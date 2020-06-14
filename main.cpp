@@ -2,6 +2,23 @@
 #include "list.hpp"
 #include <list>
 
+bool    greater_than_10(int n)
+{
+    return (n > 10);
+}
+
+bool compare(double a, double b) 
+{ 
+    return ((int)a == (int)b); 
+} 
+
+template <typename T>
+bool equal_plus_one(T first, T second) {
+	return (second == (first + 1));
+}
+
+bool mycomparison (double first, double second)
+{ return ( int(first)<int(second) ); }
 
 int main()
 {
@@ -125,7 +142,7 @@ int main()
             std::cout << ' ' << *tmp;
         std::cout << '\n';
         mylist.clear();
-    }*/
+    }
     {
         ft::list<int> mylist1, mylist2;
         ft::list<int>::iterator it;
@@ -181,6 +198,187 @@ int main()
         for (it=mylist2.begin(); it!=mylist2.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
+    }
+    {
+        ft::list<int> l;
+ 
+        l.push_back(1);
+        l.push_back(100);
+        l.push_back(2);
+        l.push_back(3);
+        l.push_back(10);
+        l.push_back(11);
+        l.push_back(-1);
+        l.push_back(12);
+        l.remove(1); // remove both elements equal to 1
+        l.remove_if(greater_than_10); // remove all elements greater than 10
+    
+        for (ft::list<int>::iterator it = l.begin(); it != l.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+        std::cout << "Size:" << l.size() << std::endl;
+    }
+    {
+        ft::list<int> x;
+ 
+        x.push_back(1);
+        x.push_back(1);
+		x.push_back(2);
+		x.push_back(1);
+		x.push_back(2);
+		x.push_back(3);
+        x.push_back(3);
+		x.push_back(2);
+		x.push_back(6);
+
+        std::cout << "contents before:";
+        for (ft::list<int>::iterator it = x.begin(); it != x.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+        
+        x.unique();
+
+        std::cout << "contents after unique():";
+        for (ft::list<int>::iterator it = x.begin(); it != x.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+    }
+    {
+        std::list<int> x;
+ 
+        x.push_back(1);
+        x.push_back(1);
+		x.push_back(2);
+		x.push_back(1);
+		x.push_back(2);
+		x.push_back(3);
+        x.push_back(3);
+		x.push_back(2);
+		x.push_back(6);
+
+        std::cout << "contents before:";
+        for (std::list<int>::iterator it = x.begin(); it != x.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+        
+        x.unique();
+
+        std::cout << "contents after unique():";
+        for (std::list<int>::iterator it = x.begin(); it != x.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+    }
+    {
+        ft::list<double> listy;
+  
+        listy.push_back(2.55);
+        listy.push_back(3.15);
+        listy.push_back(4.16);
+        listy.push_back(4.16);
+        listy.push_back(4.77);
+        listy.push_back(12.65);
+        listy.push_back(12.65);
+        listy.push_back(13.59);
+
+        std::cout << "contents before:";
+        for (ft::list<double>::iterator it = listy.begin(); it != listy.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+
+        std::cout << "contents after unique():"; 
+    
+        // unique operation on list with no parameters 
+        listy.unique(); 
+        // starts from the first element 
+        // of the list to the last 
+        for (ft::list<double>::iterator it = listy.begin(); it != listy.end(); ++it) 
+            std::cout << *it << " "; 
+        std::cout << '\n';
+        // unique operation on list with parameter 
+        listy.unique(compare); 
+    
+        std::cout << "contents after unique(compare):";
+    
+        // starts from the first element 
+        // of the list to the last 
+        for (ft::list<double>::iterator it = listy.begin(); it != listy.end(); ++it) 
+            std::cout << *it << " "; 
+        std::cout << '\n';
+    }
+    {
+        ft::list<int> list1;
+        ft::list<int> list2;
+    
+        list1.push_back(5);
+        list1.push_back(9);
+        list1.push_back(0);
+        list1.push_back(1);
+        list1.push_back(3);
+
+        list2.push_back(8);
+        list2.push_back(7);
+        list2.push_back(2);
+        list2.push_back(6);
+        list2.push_back(4);
+        list1.merge(list2);
+        std::cout << "list1 after merge:  ";
+        for (ft::list<int>::iterator it = list1.begin(); it != list1.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+        std::cout << "list2 after merge:  ";
+        for (ft::list<int>::iterator it = list2.begin(); it != list2.end(); ++it)
+            std::cout << *it << ' ';
+        std::cout << '\n';
+
+    }*/
+    {
+        std::list<double> first, second;
+
+        first.push_back (3.1);
+        first.push_back (2.2);
+        first.push_back (2.9);
+
+        second.push_back (7.1);
+        second.push_back (3.7);
+        second.push_back (1.4);
+
+        std::cout << "first contains:";
+        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+        first.sort();
+        std::cout << "first contains after sort:";
+        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+
+        std::cout << "second contains:";
+        for (std::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+        second.sort();
+        std::cout << "second contains after sort:";
+        for (std::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+        /*
+        first.merge(second);
+
+        std::cout << "first contains:";
+        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+
+        // (second is now empty)
+
+        second.push_back (2.1);
+
+        first.merge(second, mycomparison);
+
+        std::cout << "first contains:";
+        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';*/
     }
     return (0);
 }
