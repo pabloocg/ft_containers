@@ -22,7 +22,7 @@ class Node
 
         Node(): previous(nullptr), value(), next(nullptr) {};
         Node(T const val): previous(nullptr), value(val), next(nullptr) {};
-        Node(const m_node &other): previous(other->node_previous()), value(other->node_value()), next(other->node_next()) {};
+        Node(const m_node &other): previous(other->previous), value(other->value), next(other->next) {};
         virtual ~Node() {};
 
         void        leave_node()
@@ -89,13 +89,35 @@ class Node
 
         void    swap(m_node other_node)
         {
-            m_node tmp;
+            Node<value_type>    tmp(other_node);
 
-            tmp = other_node;
-            other_node->next = this->next;
-            other_node->previous = this->previous;
-            this->previous = tmp->previous;
-            this->next = tmp->next;
+            if (tmp.node_next() && tmp.node_next() != this)
+                tmp.node_next()->previous = this;
+            if (tmp.node_previous() && tmp.node_previous() != this)
+                tmp.node_previous()->next = this;
+
+            if (this->next && this->next != other_node)
+                this->next->previous = other_node;
+            if (this->previous && this->previous != other_node)
+                this->previous->next = other_node;
+
+            if (this->next && this->next == other_node)
+                other_node->next = this;
+            else
+                other_node->next = this->next;
+            if (this->previous == other_node)
+                other_node->previous = this;
+            else
+                other_node->previous = this->previous;
+
+            if (tmp.node_previous() && tmp.node_previous() == this)
+                this->previous = other_node;
+            else
+                this->previous = tmp.node_previous();
+            if (tmp.node_next() && tmp.node_next() == this)
+                this->next = other_node;
+            else
+                this->next = tmp.node_next();
         }
 
         m_node& operator= (const m_node & other)

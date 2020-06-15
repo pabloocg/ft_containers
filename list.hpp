@@ -606,22 +606,47 @@ class list
         template <class Compare>
         void sort (Compare comp)
         {
-            for (iterator it = this->begin(); it != this->end(); it++)
+            iterator it;
+
+            for (size_type i = 0; i < this->size(); i++)
             {
-                for (iterator it2 = this->begin(); it2 != this->end(); it2++)
+                it = this->begin();
+                for (iterator it2 = this->begin() + 1; it2 != this->end(); it2++)
                 {
-                    if (comp(*it, *it2))
+                    if (it != it2 && comp(*it, *it2))
                     {
                         it.get_pointer()->swap(it2.get_pointer());
                         if (it == this->begin())
                             this->n_begin = it2.get_pointer();
+                        else if (it2 == this->begin())
+                            this->n_begin = it.get_pointer();
+                        it2 = it;
                     }
+                    else
+                        it++;
                 }
             }
         };
 
         /*Reverses the order of the elements in the list container.*/
-        //void reverse();
+        void reverse()
+        {
+            iterator it;
+            iterator it2;
+
+            for (size_type i = 0; i < this->size(); i++)
+            {
+                it = this->begin();
+                it2 = it + 1;
+                while (it2 != this->end() - i)
+                {
+                    it.get_pointer()->swap(it2.get_pointer());
+                    if (it == this->begin())
+                        this->n_begin = it2.get_pointer();
+                    it2 = it + 1;
+                }
+            }
+        };
 
 };
 

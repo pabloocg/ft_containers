@@ -330,42 +330,52 @@ int main()
             std::cout << *it << ' ';
         std::cout << '\n';
 
-    }*/
+    }
     {
-        std::list<double> first, second;
+        ft::list<double> first, second;
 
         first.push_back (3.1);
-        first.push_back (2.2);
         first.push_back (2.9);
+        first.push_back (2.2);
+        first.push_back (7.2);
+        first.push_back (-2.2);
+        first.push_back (4.2);
+        first.push_back (1.2);
 
         second.push_back (7.1);
         second.push_back (3.7);
         second.push_back (1.4);
+        second.push_back (10.4);
+        second.push_back (-1.1);
+        second.push_back (2.4);
+        second.push_back (3.4);
 
         std::cout << "first contains:";
-        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
-            std::cout << ' ' << *it;
-        std::cout << '\n';
-        first.sort();
-        std::cout << "first contains after sort:";
-        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+        for (ft::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
 
+        first.sort();
+
+        std::cout << "first contains after sort:";
+        for (ft::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+
+        
         std::cout << "second contains:";
-        for (std::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
+        for (ft::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
         second.sort();
         std::cout << "second contains after sort:";
-        for (std::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
+        for (ft::list<double>::iterator it=second.begin(); it!=second.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
-        /*
         first.merge(second);
 
         std::cout << "first contains:";
-        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+        for (ft::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
 
@@ -376,9 +386,27 @@ int main()
         first.merge(second, mycomparison);
 
         std::cout << "first contains:";
-        for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+        for (ft::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
             std::cout << ' ' << *it;
-        std::cout << '\n';*/
+        std::cout << '\n';
+    }
+    */
+    {
+        ft::list<int> mylist;
+
+        for (int i=1; i<10; ++i) mylist.push_back(i);
+
+        std::cout << "mylist contains:";
+        for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
+
+        mylist.reverse();
+
+        std::cout << "mylist contains after reverse:";
+        for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+            std::cout << ' ' << *it;
+        std::cout << '\n';
     }
     return (0);
 }
