@@ -356,6 +356,13 @@ class list
                 this->push_back(*first);
         };
 
+        void assign (const_iterator first, const_iterator last)
+        {
+            this->clear();
+            for (; first != last; ++first)
+                this->push_back(*first);
+        };
+
         void assign (size_type n, const value_type& val)
         {
             this->clear();
@@ -384,6 +391,8 @@ class list
             free(this->n_begin);
             this->n_begin = tmp;
             this->list_size--;
+            if (this->list_size == 0)
+                this->reset();
         };
 
         /*Add element at the end*/
@@ -401,11 +410,21 @@ class list
         {
             if (this->empty())
                 return ;
-            node_type *tmp = this->n_end->node_previous()->node_previous();
-            tmp->connect_next(this->n_end);
-            free(this->n_end->node_previous());
-            this->n_end->connect_previous(tmp);
+            else if (this->size() == 1)
+            {
+                free(this->n_end->node_previous());
+                this->n_begin = n_end;
+            }
+            else
+            {
+                node_type *tmp = this->n_end->node_previous()->node_previous();
+                tmp->connect_next(this->n_end);
+                free(this->n_end->node_previous());
+                this->n_end->connect_previous(tmp);
+            }
             this->list_size--;
+            if (this->list_size == 0)
+                this->reset();
         };
 
         /*Insert elements*/
@@ -478,7 +497,7 @@ class list
                 for (size_t i = this->size(); i < n; i++)
                     this->push_back(val);
             else if (n < this->size())
-                for (size_t i = this->size(); i > n && n > 0; i--)
+                for (size_t i = this->size(); i > n && n >= 0; i--)
                     this->pop_back();
         };
 
@@ -600,7 +619,7 @@ class list
 
             while (it != this->end())
             {
-                if (comp(*it, *itl))
+                if (comp(*it, *itl) && it != itl)
                 {
                     this->splice(it, x, itl++);
                     it = this->begin();

@@ -1,24 +1,4 @@
-#include <iostream>
-#include "list.hpp"
-#include <list>
-
-bool    greater_than_10(int n)
-{
-    return (n > 10);
-}
-
-bool compare(double a, double b) 
-{ 
-    return ((int)a == (int)b); 
-} 
-
-template <typename T>
-bool equal_plus_one(T first, T second) {
-	return (second == (first + 1));
-}
-
-bool mycomparison (double first, double second)
-{ return ( int(first)<int(second) ); }
+#include "list_test.cpp"
 
 int main()
 {
@@ -406,7 +386,6 @@ int main()
         for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
-    }*/
     {
         ft::list<int> mylist;
         ft::list<int> syslist;
@@ -426,5 +405,6 @@ int main()
         else
             std::cout << "false" << std::endl;
     }
+    }*/
     return (0);
 }
