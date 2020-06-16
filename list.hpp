@@ -8,25 +8,29 @@
 namespace ft
 {
 
-template <typename T>
+template <typename T, typename Node>
 class iterator_list
 {
     public:
 
         typedef T                   value_type;
-        typedef Node<value_type>    node_type;
+        typedef Node                node_type;
+	    typedef node_type*          node_pointer;
         typedef value_type &        reference;
+        typedef value_type const &  const_reference;
 
     private:
-        node_type  *pointer;
+
+        node_pointer    pointer;
     
     public:
+
         iterator_list(void): pointer(nullptr) {};
-        iterator_list(node_type *point): pointer(point) {};
-        iterator_list(iterator_list  const &other): pointer(other.get_pointer()) {};
+        iterator_list(node_pointer point): pointer(point) {};
+        iterator_list(iterator_list const &other): pointer(other.get_pointer()) {};
         virtual ~iterator_list() {};
 
-        node_type   *get_pointer() const
+        node_pointer    get_pointer() const
         {
             return (this->pointer);
         }
@@ -49,6 +53,13 @@ class iterator_list
             return (tmp);
         };
 
+        iterator_list operator++ (int) const
+        {
+            iterator_list   tmp(*this);
+            this->pointer = this->pointer->node_next();
+            return (tmp);
+        };
+
         iterator_list& operator-- ()
         {
             this->pointer = this->pointer->node_previous();
@@ -62,7 +73,19 @@ class iterator_list
             return (tmp);
         };
 
+        iterator_list operator-- (int) const
+        {
+            iterator_list   tmp(*this);
+            this->pointer = this->pointer->node_previous();
+            return (tmp);
+        };
+
         reference operator* ()
+        {
+            return (this->pointer->node_value());
+        };
+
+        const_reference operator* () const
         {
             return (this->pointer->node_value());
         };
@@ -122,39 +145,39 @@ class iterator_list
             return (*this);
         };
 
-        bool operator== (const iterator_list & other)
+        bool operator== (const iterator_list & other) const
         {
             return (this->pointer == other.get_pointer());
         };
 
-        bool operator!= (const iterator_list & other)
+        bool operator!= (const iterator_list & other) const
         {
             return (this->pointer != other.get_pointer());
         };
 
-        bool operator>= (const iterator_list & other)
+        bool operator>= (const iterator_list & other) const
         {
             return (this->pointer >= other.get_pointer());
         };
 
-        bool operator<= (const iterator_list & other)
+        bool operator<= (const iterator_list & other) const
         {
             return (this->pointer <= other.get_pointer());
         };
 
-        bool operator< (const iterator_list & other)
+        bool operator< (const iterator_list & other) const
         {
             return (this->pointer < other.get_pointer());
         };
 
-        bool operator> (const iterator_list & other)
+        bool operator> (const iterator_list & other) const
         {
             return (this->pointer > other.get_pointer());
         };
 
 };
 
-template <typename T, class Alloc = std::allocator<T> >
+template <typename T>
 class list
 {
 
@@ -162,24 +185,24 @@ class list
 
     public:
 
-        typedef T                               value_type;
-        typedef Node<value_type>                node_type;
-        typedef Alloc                           allocator_type;
-        typedef value_type                  &   reference;
-        typedef value_type const            &   const_reference;
-        typedef value_type                  *   pointer;
-        typedef value_type const            *   const_pointer;
-        typedef iterator_list<value_type>       iterator;
-        typedef iterator_list<value_type> const const_iterator;
-        //typedef typename std::list<T, allocator_type>::reverse_iterator              reverse_iterator;
-        //typedef typename std::list<T, allocator_type>::const_reverse_iterator        const_reverse_iterator;
-        typedef std::ptrdiff_t                  difference_type;
-        typedef size_t                          size_type;
+        typedef T                                                   value_type;
+        typedef Node<value_type>                                    node_type;
+        typedef node_type                   *                       node_pointer;
+        typedef value_type                  &                       reference;
+        typedef value_type const            &                       const_reference;
+        typedef value_type                  *                       pointer;
+        typedef value_type const            *                       const_pointer;
+        typedef iterator_list<value_type, node_type>                iterator;
+        typedef iterator_list<value_type const, node_type const>    const_iterator;
+        //typedef typename std::list<T,ator_type>::reverse_iterator              reverse_iterator;
+        //typedef typename std::list<T,ator_type>::const_reverse_iterator        const_reverse_iterator;
+        typedef std::ptrdiff_t                                      difference_type;
+        typedef size_t                                              size_type;
 
     private:
 
-        node_type         *n_begin;
-        node_type         *n_end;
+        node_pointer         n_begin;
+        node_pointer         n_end;
         size_type         list_size;
 
         void    init_list()
@@ -651,28 +674,62 @@ class list
 };
 
 /*          Non-member function overloads               */
-/*
-template <class T, class Alloc>
-  bool operator== (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
 
-template <class T, class Alloc>
-  bool operator!= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+template <typename T>
+bool operator== (const list<T>& lhs, const list<T>& rhs)
+{
+    if (lhs.size() != rhs.size())
+        return (false);
+    typename list<T>::const_iterator it = lhs.cbegin();
+    typename list<T>::const_iterator it2 = rhs.cbegin();
+    while (it != lhs.cend())
+        if (*it++ != *it2++)
+            return (false);
+    return (true);
+};
 
-template <class T, class Alloc>
-  bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+template <typename T>
+bool operator!= (const list<T>& lhs, const list<T>& rhs)
+{
+    return (!(lhs == rhs));
+};
 
-template <class T, class Alloc>
-  bool operator<= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+template <typename T>
+bool operator<  (const list<T>& lhs, const list<T>& rhs)
+{
+    if (lhs.size() != rhs.size())
+        return (lhs.size() < rhs.size());
+    typename list<T>::const_iterator it = lhs.cbegin();
+    typename list<T>::const_iterator it2 = rhs.cbegin();
+    while (it != lhs.cend())
+        if (*it++ < *it2++)
+            return (true);
+    return (false);
+};
 
-template <class T, class Alloc>
-  bool operator>  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+template <typename T>
+bool operator<= (const list<T>& lhs, const list<T>& rhs)
+{
+    return ((lhs < rhs) || (lhs == rhs));
+};
 
-template <class T, class Alloc>
-  bool operator>= (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs);
+template <typename T>
+bool operator>  (const list<T>& lhs, const list<T>& rhs)
+{
+    return (rhs < lhs);
+};
 
-template <class T, class Alloc>
-void swap (list<T,Alloc>& x, list<T,Alloc>& y);
-*/
+template <typename T>
+bool operator>= (const list<T>& lhs, const list<T>& rhs)
+{
+    return ((rhs < lhs) || (rhs == lhs));
+};
+
+template <typename T>
+void swap (list<T>& x, list<T>& y)
+{
+    x.swap(y);
+};
 
 }
 

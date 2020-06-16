@@ -390,7 +390,6 @@ int main()
             std::cout << ' ' << *it;
         std::cout << '\n';
     }
-    */
     {
         ft::list<int> mylist;
 
@@ -407,6 +406,25 @@ int main()
         for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
+    }*/
+    {
+        ft::list<int> mylist;
+        ft::list<int> syslist;
+
+        mylist.push_back(2);
+        mylist.push_back(10);
+        mylist.push_back(3);
+        mylist.push_back(4);
+
+        syslist.push_back(2);
+        syslist.push_back(10);
+        syslist.push_back(3);
+        syslist.push_back(4);
+
+        if (mylist >= syslist)
+            std::cout << "true" << std::endl;
+        else
+            std::cout << "false" << std::endl;
     }
     return (0);
 }

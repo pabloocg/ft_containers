@@ -40,10 +40,10 @@ class Node
             return (this->value);
         }
 
-        //value_type  node_value(void) const
-        //{
-        //    return (this->value);
-        //}
+        const value_type  &node_value(void) const
+        {
+            return (this->value);
+        }
 
         m_node      node_previous(void)
         {
@@ -51,6 +51,16 @@ class Node
         }
 
         m_node      node_next(void)
+        {
+            return (this->next);
+        }
+
+        const m_node      node_previous(void) const
+        {
+            return (this->previous);
+        }
+
+        const m_node      node_next(void) const
         {
             return (this->next);
         }
