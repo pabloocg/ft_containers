@@ -3,7 +3,11 @@
 # include "tools/Node.hpp"
 # include "tools/algorithm.hpp"
 # include <limits>
+/*
 
+    Hacer reverse iterator
+
+*/
 
 namespace ft
 {
@@ -617,7 +621,7 @@ class list
             iterator it = this->begin();
             iterator itl = x.begin();
 
-            while (it != this->end())
+            while (it != this->end() && itl != x.end())
             {
                 if (comp(*it, *itl) && it != itl)
                 {

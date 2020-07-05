@@ -44,9 +44,6 @@ void    display_container(std::string text, ft::list<T> l)
     std::cout << '\n';
 }
 
-//FAIL in LINE 463 -- merge function
-//FAIL in LINE 509 -- sort function
-
 int main()
 {
 	std::cout << "\n---basic\n\n";
@@ -464,7 +461,7 @@ int main()
 		lst.merge(lst2, &lesser_than_rhs<int>);
 
 		std::cout << "lst size "<< lst.size() << ", lst2 size " << lst2.size() << '\n';
-		std::cout << "lst2 empty ? " << lst2.size() << '\n';
+		std::cout << "lst2 empty ? " << lst2.empty() << '\n';
 		display_container("[5, 5, 12, 28, 42, 43, 44, 45] {lst after merge}:", lst);
 			assert(lst.size() == 8);
 		display_container("empty lst2 after merge []:", lst2);
