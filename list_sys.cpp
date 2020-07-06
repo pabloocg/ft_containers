@@ -1,7 +1,8 @@
 #ifndef LIST_TEST_HPP
 # define LIST_TEST_HPP
 
-# include "list.hpp"
+# include <list>
+# include <iostream>
 
 
 template<typename Container>
@@ -61,7 +62,7 @@ int main(void)
 {
 	std::cout << "\n---basic\n\n";
 	{
-		ft::list<int> empty_list;
+		std::list<int> empty_list;
 		{
 			std::cout << "[begin] == [end] on empty list" << '\n';
 				assert(empty_list.begin() == empty_list.end());
@@ -72,7 +73,7 @@ int main(void)
 				assert(empty_list.size() == 0);
 		}
 
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		{
@@ -89,7 +90,7 @@ int main(void)
 
 	std::cout << "\n---push_back\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(3);
@@ -98,15 +99,15 @@ int main(void)
 		int i = 1;
 		display_container("[5, 42, 3]:", lst);
 
-		typename ft::list<int>::reverse_iterator rit = lst.rbegin();
-		typename ft::list<int>::reverse_iterator rite = lst.rend();
+		typename std::list<int>::reverse_iterator rit = lst.rbegin();
+		typename std::list<int>::reverse_iterator rite = lst.rend();
 		i = 1;
 		std::cout << "(reverse) [5, 42, 3]:" << '\n';
 		while (rit != rite)
 			std::cout << i++ << " -> " << *rit++ << '\n';
 
-		typename ft::list<int>::iterator it = lst.begin();
-		typename ft::list<int>::iterator ite = lst.end();
+		typename std::list<int>::iterator it = lst.begin();
+		typename std::list<int>::iterator ite = lst.end();
 		std::cout << "pop_back from [5, 42, 3]:" << '\n';
 		for (size_t i = 0; i < 3; i++) {
 			lst.pop_back();
@@ -126,7 +127,7 @@ int main(void)
 
 	std::cout << "\n---push_front\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_front(3);
 		lst.push_front(42);
 		lst.push_front(5);
@@ -134,15 +135,15 @@ int main(void)
 		display_container("[5, 42, 3]:", lst);
 			assert(lst.size() == 3);
 
-		typename ft::list<int>::reverse_iterator rit = lst.rbegin();
-		typename ft::list<int>::reverse_iterator rite = lst.rend();
+		typename std::list<int>::reverse_iterator rit = lst.rbegin();
+		typename std::list<int>::reverse_iterator rite = lst.rend();
 		int i = 1;
 		std::cout << "(reverse) [5, 42, 3]:" << '\n';
 		while (rit != rite)
 			std::cout << i++ << " -> " << *rit++ << '\n';
 
-		typename ft::list<int>::iterator it;
-		typename ft::list<int>::iterator ite;
+		typename std::list<int>::iterator it;
+		typename std::list<int>::iterator ite;
 		std::cout << "pop_front from [5, 42, 3]:" << '\n';
 		for (size_t i = 0; i < 3; i++) {
 			lst.pop_front();
@@ -162,7 +163,7 @@ int main(void)
 
 	std::cout << "\n---clear\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(3);
@@ -170,7 +171,7 @@ int main(void)
 		display_container("[5, 42, 3]:", lst);
 			assert(lst.size() == 3);
 
-		ft::list<int> lst2(lst);
+		std::list<int> lst2(lst);
 		lst.clear();
 			assert(lst.size() == 0);
 			assert(lst2.size() == 3);
@@ -184,7 +185,7 @@ int main(void)
 
 	std::cout << "\n---erase\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(3);
@@ -195,7 +196,7 @@ int main(void)
 		display_container("42 deleted [5, 3]:", lst);
 			assert(lst.size() == 2);
 
-		typename ft::list<int>::iterator it = lst.erase(--lst.end());
+		typename std::list<int>::iterator it = lst.erase(--lst.end());
 		std::cout << "deleted [end] -> ";
 			assert(it == lst.end());
 
@@ -206,14 +207,14 @@ int main(void)
 
 	std::cout << "\n---assign\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 			assert(lst.size() == 0);
 
 		lst.assign(5, 42);
 		display_container("[42, 42, 42, 42, 42]:", lst);
 			assert(lst.size() == 5);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.assign(5, 43);
 		display_container("lst2[43, 43, 43, 43, 43]:", lst2);
 			assert(lst2.size() == 5);
@@ -230,7 +231,7 @@ int main(void)
 
 	std::cout << "\n---insert\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 			assert(lst.size() == 0);
 
 		lst.insert(lst.begin(), 5);
@@ -241,7 +242,7 @@ int main(void)
 		display_container("lst[42, 42, 5]:", lst);
 			assert(lst.size() == 3);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 			assert(lst2.size() == 0);
 
 		lst2.insert(lst2.begin(), lst.begin(), lst.end());
@@ -255,7 +256,7 @@ int main(void)
 
 	std::cout << "\n---remove\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
@@ -294,7 +295,7 @@ int main(void)
 
 	std::cout << "\n---remove_if\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
@@ -321,7 +322,7 @@ int main(void)
 
 	std::cout << "\n---unique\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(5);
 		lst.push_back(42);
@@ -355,7 +356,7 @@ int main(void)
 
 	std::cout << "\n---unique (binary pred)\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(5);
 		lst.push_back(42);
@@ -380,7 +381,7 @@ int main(void)
 
 		std::cout << "double list:" << '\n';
 		{
-			ft::list<double> lst;
+			std::list<double> lst;
 			lst.push_back(2.72);
 			lst.push_back(3.14);
 			lst.push_back(12.15);
@@ -401,7 +402,7 @@ int main(void)
 
 	std::cout << "\n---unique (binary pred again)\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(1);
 		lst.push_back(2);
 		lst.push_back(1);
@@ -420,13 +421,13 @@ int main(void)
 
 	std::cout << "\n---merge\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
 		lst.push_back(44);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(12);
 		lst2.push_back(28);
 		lst2.push_back(45);
@@ -451,13 +452,13 @@ int main(void)
 
 	std::cout << "\n---merge (comp)\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
 		lst.push_back(44);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(12);
 		lst2.push_back(28);
 		lst2.push_back(45);
@@ -483,7 +484,7 @@ int main(void)
 
 	std::cout << "\n---sort\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(44);
 		lst.push_back(58);
 		lst.push_back(43);
@@ -506,7 +507,7 @@ int main(void)
 
 	std::cout << "\n---sort (comp)\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(42);
@@ -529,7 +530,7 @@ int main(void)
 
 	std::cout << "\n---reverse\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
@@ -547,7 +548,7 @@ int main(void)
 		display_container("[5, 42, 43, 44, 58] {reversed twice}:", lst);
 			assert(lst.size() == 5);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(5);
 		lst2.push_back(42);
 
@@ -565,7 +566,7 @@ int main(void)
 
 	std::cout << "\n---resize\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 
@@ -591,11 +592,11 @@ int main(void)
 
 	std::cout << "\n---splice\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(43);
 		lst2.push_back(45);
 		lst2.push_back(58);
@@ -626,23 +627,23 @@ int main(void)
 
 	std::cout << "\n---comparison\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 			assert(lst.size() == 2);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(5);
 		lst2.push_back(42);
 			assert(lst2.size() == 2);
 
-		ft::list<int> lst3;
+		std::list<int> lst3;
 		lst3.push_back(5);
 		lst3.push_back(42);
 		lst3.push_back(43);
 			assert(lst3.size() == 3);
 
-		ft::list<int> lst4;
+		std::list<int> lst4;
 		lst4.push_back(99);
 		lst4.push_back(42);
 		lst4.push_back(43);
@@ -693,12 +694,12 @@ int main(void)
 
 	std::cout << "\n---swap\n\n";
 	{
-		ft::list<int> lst;
+		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
 		lst.push_back(43);
 
-		ft::list<int> lst2;
+		std::list<int> lst2;
 		lst2.push_back(12);
 		lst2.push_back(30);
 		lst2.push_back(60);

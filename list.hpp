@@ -1,185 +1,42 @@
 #ifndef LIST_HPP
 # define LIST_HPP
+
 # include "tools/Node.hpp"
 # include "tools/algorithm.hpp"
+# include "tools/list_iterator.hpp"
+# include "tools/reverse_iterator.hpp"
 # include <limits>
 /*
+    diff:
+    + Funcion max_size()
+        5c5
+        < max_size (list) = 768614336404564650
+        ---
+        > max_size (list) = 9223372036854775808
+    
+    + Funcion merge()
+        152c152
+        < 5, 12, 28, 42, 43, 44, 45, 5
+        ---
+        > 5, 42, 43, 12, 28, 45, 5, 44
+        166c166
+        < 5, 12, 28, 42, 43, 44, 45, 5
+        ---
+        > 45, 28, 12, 5, 5, 42, 43, 44
 
-    Hacer reverse iterator
-
+    + Funcion sort()
+        183c183
+        < 58, 44, 43, 43, 42, 42, 5
+        ---
+        > 5, 42, 42, 43, 43, 44, 58
+        185c185
+        < 58, 44, 43, 43, 42, 42, 5
+        ---
+        > 5, 42, 42, 43, 43, 44, 58
 */
 
 namespace ft
 {
-
-template <typename T, typename Node>
-class iterator_list
-{
-    public:
-
-        typedef T                   value_type;
-        typedef Node                node_type;
-	    typedef node_type*          node_pointer;
-        typedef value_type &        reference;
-        typedef value_type const &  const_reference;
-
-    private:
-
-        node_pointer    pointer;
-    
-    public:
-
-        iterator_list(void): pointer(nullptr) {};
-        iterator_list(node_pointer point): pointer(point) {};
-        iterator_list(iterator_list const &other): pointer(other.get_pointer()) {};
-        virtual ~iterator_list() {};
-
-        node_pointer    get_pointer() const
-        {
-            return (this->pointer);
-        }
-
-        void        set_pointer(node_type *ptr)
-        {
-            this->pointer = ptr;
-        }
-
-        iterator_list& operator++ ()
-        {
-            this->pointer = this->pointer->node_next();
-            return (*this);
-        };
-
-        iterator_list operator++ (int)
-        {
-            iterator_list   tmp(*this);
-            this->pointer = this->pointer->node_next();
-            return (tmp);
-        };
-
-        iterator_list operator++ (int) const
-        {
-            iterator_list   tmp(*this);
-            this->pointer = this->pointer->node_next();
-            return (tmp);
-        };
-
-        iterator_list& operator-- ()
-        {
-            this->pointer = this->pointer->node_previous();
-            return (*this);
-        };
-
-        iterator_list operator-- (int)
-        {
-            iterator_list   tmp(*this);
-            this->pointer = this->pointer->node_previous();
-            return (tmp);
-        };
-
-        iterator_list operator-- (int) const
-        {
-            iterator_list   tmp(*this);
-            this->pointer = this->pointer->node_previous();
-            return (tmp);
-        };
-
-        reference operator* ()
-        {
-            return (this->pointer->node_value());
-        };
-
-        const_reference operator* () const
-        {
-            return (this->pointer->node_value());
-        };
-
-        iterator_list& operator= (const iterator_list & other)
-        {
-            this->pointer = other.get_pointer();
-            return (*this);
-        };
-
-        
-        iterator_list   operator+ (int val)
-        {
-            iterator_list   tmp(*this);
-
-            for (int i = 0; i < val; i++)
-            {
-                tmp.set_pointer(tmp.get_pointer()->node_next());
-                if (tmp.get_pointer()->node_next() == nullptr)
-                    break ;
-            }
-            return (tmp);
-        };
-
-        iterator_list   operator- (int val)
-        {
-            iterator_list   tmp(*this);
-
-            for (int i = 0; i < val; i++)
-            {
-                tmp.set_pointer(tmp.get_pointer()->node_previous());
-                if (tmp.get_pointer()->node_previous() == nullptr)
-                    break ;
-            }
-            return (tmp);
-        };
-
-        iterator_list&   operator+= (int val)
-        {
-            for (int i = 0; i < val; i++)
-            {
-                this->pointer = this->pointer->node_next();
-                if (this->pointer->node_next() == nullptr)
-                    break ;
-            }
-            return (*this);
-        };
-
-        iterator_list&   operator-= (int val)
-        {
-            for (int i = 0; i < val; i++)
-            {
-                this->pointer = this->pointer->node_previous();
-                if (this->pointer->node_previous() == nullptr)
-                    break ;
-            }
-            return (*this);
-        };
-
-        bool operator== (const iterator_list & other) const
-        {
-            return (this->pointer == other.get_pointer());
-        };
-
-        bool operator!= (const iterator_list & other) const
-        {
-            return (this->pointer != other.get_pointer());
-        };
-
-        bool operator>= (const iterator_list & other) const
-        {
-            return (this->pointer >= other.get_pointer());
-        };
-
-        bool operator<= (const iterator_list & other) const
-        {
-            return (this->pointer <= other.get_pointer());
-        };
-
-        bool operator< (const iterator_list & other) const
-        {
-            return (this->pointer < other.get_pointer());
-        };
-
-        bool operator> (const iterator_list & other) const
-        {
-            return (this->pointer > other.get_pointer());
-        };
-
-};
 
 template <typename T>
 class list
@@ -196,12 +53,12 @@ class list
         typedef value_type const            &                       const_reference;
         typedef value_type                  *                       pointer;
         typedef value_type const            *                       const_pointer;
-        typedef iterator_list<value_type, node_type>                iterator;
-        typedef iterator_list<value_type const, node_type const>    const_iterator;
-        //typedef typename std::list<T,ator_type>::reverse_iterator              reverse_iterator;
-        //typedef typename std::list<T,ator_type>::const_reverse_iterator        const_reverse_iterator;
         typedef std::ptrdiff_t                                      difference_type;
         typedef size_t                                              size_type;
+        typedef IteratorList<value_type, node_type>                iterator;
+        typedef IteratorList<value_type const, node_type const>    const_iterator;
+        typedef ReverseIterator<iterator>                          reverse_iterator;
+        typedef ReverseIterator<const_iterator>                    const_reverse_iterator;
 
     private:
 
@@ -288,10 +145,16 @@ class list
         };
 
         /*Return reverse iterator to reverse beginning*/
-        //reverse_iterator rbegin();
+        reverse_iterator rbegin()
+        {
+            return (reverse_iterator(this->end()));
+        };
 
         /*Return reverse iterator to reverse end*/
-        //reverse_iterator rend();
+        reverse_iterator rend()
+        {
+            return (reverse_iterator(this->begin()));
+        };
 
         /*Return const_iterator to beginning*/
         const_iterator cbegin() const
@@ -306,10 +169,16 @@ class list
         };
 
         /*Return const_reverse_iterator to reverse beginning*/
-        //const_reverse_iterator crbegin() const;
+        const_reverse_iterator crbegin() const
+        {
+            return (const_reverse_iterator(this->cend()));
+        };
 
         /*Return const_reverse_iterator to reverse end*/
-        //const_reverse_iterator crend() const;
+        const_reverse_iterator crend() const
+        {
+            return (const_reverse_iterator(this->cbegin()));
+        };
 
 
                     /*          Capacity            */

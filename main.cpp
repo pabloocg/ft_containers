@@ -1,4 +1,4 @@
-#include "list_test.cpp"
+#include <iostream>
 
 int main()
 {
@@ -375,17 +375,17 @@ int main()
 
         for (int i=1; i<10; ++i) mylist.push_back(i);
 
-        std::cout << "mylist contains:";
-        for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+        std::cout << "mylist normal iterator:";
+        for (ft::list<int>::iterator it=mylist.begin(); it != mylist.end(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
 
-        mylist.reverse();
-
-        std::cout << "mylist contains after reverse:";
-        for (ft::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+        std::cout << "mylist reverse iterator:";
+        for (ft::list<int>::reverse_iterator it=mylist.rbegin(); it != mylist.rend(); ++it)
             std::cout << ' ' << *it;
         std::cout << '\n';
+
+    }
     {
         ft::list<int> mylist;
         ft::list<int> syslist;
@@ -405,6 +405,6 @@ int main()
         else
             std::cout << "false" << std::endl;
     }
-    }*/
+    */
     return (0);
 }
