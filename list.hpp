@@ -14,25 +14,6 @@
         ---
         > max_size (list) = 9223372036854775808
     
-    + Funcion merge()
-        152c152
-        < 5, 12, 28, 42, 43, 44, 45, 5
-        ---
-        > 5, 42, 43, 12, 28, 45, 5, 44
-        166c166
-        < 5, 12, 28, 42, 43, 44, 45, 5
-        ---
-        > 45, 28, 12, 5, 5, 42, 43, 44
-
-    + Funcion sort()
-        183c183
-        < 58, 44, 43, 43, 42, 42, 5
-        ---
-        > 5, 42, 42, 43, 43, 44, 58
-        185c185
-        < 58, 44, 43, 43, 42, 42, 5
-        ---
-        > 5, 42, 42, 43, 43, 44, 58
 */
 
 namespace ft
@@ -198,8 +179,7 @@ class list
         /*Return maximum size*/
         size_type max_size() const
         {
-            return std::max<size_type>(std::numeric_limits<difference_type >::min(),
-                                std::numeric_limits<difference_type >::max());
+            return (std::numeric_limits<size_type>::max() / (sizeof(node_type) - sizeof(pointer)));
         };
 
 
@@ -481,41 +461,35 @@ class list
         /*Merge sorted lists*/
         void merge (list& x)
         {
-            this->splice(iterator(this->n_end->node_previous()), x, x.begin(), x.end());
+            this->merge(x, &less<value_type>);
         };
 
         template <class Compare>
         void merge (list& x, Compare comp)
         {
             iterator it = this->begin();
+            iterator itend = this->end();
             iterator itl = x.begin();
+            iterator itlend = x.end();
 
-            while (it != this->end() && itl != x.end())
+            while (it != itend && itl != itlend)
             {
-                if (comp(*it, *itl) && it != itl)
+                if ((*comp)(*itl, *it) && it != itl)
                 {
-                    this->splice(it, x, itl++);
+                    this->splice(it, x, itl);
                     it = this->begin();
+                    itl = x.begin();
                 }
                 else
-                {
-                    if (it.get_pointer()->node_next() == this->end().get_pointer())
-                    {
-                        this->splice(it, x, itl++);
-                        it = this->begin();
-                    }
-                    else
-                        it++;
-                }
-                if (it.get_pointer()->node_next() == this->end().get_pointer() && itl.get_pointer()->node_next() != x.end().get_pointer())
-                    it = this->begin();
+                    it++;
             }
+            this->splice(itend, x);
         };
 
         /*Sort elements in container*/
         void sort()
         {
-            this->sort(less<value_type>);
+            this->sort(&less<value_type>);
         };
 
         template <class Compare>
@@ -528,7 +502,8 @@ class list
                 it = this->begin();
                 for (iterator it2 = this->begin() + 1; it2 != this->end(); it2++)
                 {
-                    if (it != it2 && comp(*it, *it2))
+                    //std::cout << *it << "--" << *it2 << std::endl;
+                    if (it != it2 && (*comp)(*it2, *it))
                     {
                         it.get_pointer()->swap(it2.get_pointer());
                         if (it == this->begin())
@@ -536,6 +511,7 @@ class list
                         else if (it2 == this->begin())
                             this->n_begin = it.get_pointer();
                         it2 = it;
+                        //std::cout << "inside ->" << *it << "--" << *it2 << std::endl;
                     }
                     else
                         it++;

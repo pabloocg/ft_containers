@@ -59,6 +59,7 @@ bool equal_plus_one(T first, T second) {
 
 int main(void)
 {
+
 	std::cout << "\n---basic\n\n";
 	{
 		ft::list<int> empty_list;
@@ -417,7 +418,6 @@ int main(void)
 		display_container("[1, 1, 3, 2, 6] {equal_plus_one}:", lst);
 			assert(lst.size() == 5);
 	}
-
 	std::cout << "\n---merge\n\n";
 	{
 		ft::list<int> lst;
@@ -449,6 +449,7 @@ int main(void)
 			assert(lst2.size() == 0);
 	}
 
+
 	std::cout << "\n---merge (comp)\n\n";
 	{
 		ft::list<int> lst;
@@ -474,13 +475,12 @@ int main(void)
 		lst.merge(lst2, &lesser_than_rhs<int>);
 
 		std::cout << "lst size "<< lst.size() << ", lst2 size " << lst2.size() << '\n';
-		std::cout << "lst2 empty ? " << lst2.size() << '\n';
+		std::cout << "lst2 empty ? " << lst2.empty() << '\n';
 		display_container("[5, 5, 12, 28, 42, 43, 44, 45] {lst after merge}:", lst);
 			assert(lst.size() == 8);
 		display_container("empty lst2 after merge []:", lst2);
 			assert(lst2.size() == 0);
 	}
-
 	std::cout << "\n---sort\n\n";
 	{
 		ft::list<int> lst;
@@ -740,6 +740,7 @@ int main(void)
 	}
 
 	std::cout << '\n';
+	
 	return (0);
 }
 
