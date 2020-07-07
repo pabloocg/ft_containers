@@ -6,15 +6,6 @@
 # include "tools/list_iterator.hpp"
 # include "tools/reverse_iterator.hpp"
 # include <limits>
-/*
-    diff:
-    + Funcion max_size()
-        5c5
-        < max_size (list) = 768614336404564650
-        ---
-        > max_size (list) = 9223372036854775808
-    
-*/
 
 namespace ft
 {
