@@ -1,11 +1,11 @@
-#ifndef STACK_HPP
-# define STACK_HPP
+#ifndef QUEUE_HPP
+# define QUEUE_HPP
 # include "list.hpp"
 
 namespace ft
 {
     template <typename T, class Container = list<T> >
-    class stack
+    class queue
     {
 
         /*                      Member types                           */
@@ -22,11 +22,11 @@ namespace ft
             /*                      Member Functions                       */
         public:
 
-            explicit stack (const container_type& ctnr = container_type()): c(ctnr) {};
+            explicit queue (const container_type& ctnr = container_type()): c(ctnr) {};
 
-            stack(const stack &other): c(other.c) {};
+            queue(const queue &other): c(other.c) {};
 
-            virtual ~stack() {};
+            virtual ~queue() {};
 
 
             bool empty() const
@@ -39,12 +39,22 @@ namespace ft
                 return (this->c.size());
             };
 
-            value_type& top()
+            value_type& front()
+            {
+                return (this->c.front());
+            };
+
+            const value_type& front() const
+            {
+                return (this->c.front());
+            };
+
+            value_type& back()
             {
                 return (this->c.back());
             };
 
-            const value_type& top() const
+            const value_type& back() const
             {
                 return (this->c.back());
             };
@@ -56,10 +66,10 @@ namespace ft
 
             void pop()
             {
-                this->c.pop_back();
+                this->c.pop_front();
             };
 
-            stack &operator=(const stack &other) {
+            queue &operator=(const queue &other) {
                 this->c = other.c;
                 return (*this);
             };
@@ -67,37 +77,37 @@ namespace ft
             // The keyword friend is allowed in non-member functiones overload
             /*          Non-member function overloads               */
             template <typename type, class C>
-            friend bool operator== (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator== (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c == rhs.c);
             };
 
             template <typename type, class C>
-            friend bool operator!= (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator!= (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c != rhs.c);
             };
 
             template <typename type, class C>
-            friend bool operator<  (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator<  (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c < rhs.c);
             };
 
             template <typename type, class C>
-            friend bool operator<= (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator<= (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c <= rhs.c);
             };
 
             template <typename type, class C>
-            friend bool operator>  (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator>  (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c > rhs.c);
             };
 
             template <typename type, class C>
-            friend bool operator>= (const stack<type,C>& lhs, const stack<type,C>& rhs)
+            friend bool operator>= (const queue<type,C>& lhs, const queue<type,C>& rhs)
             {
                 return (lhs.c >= rhs.c);
             };

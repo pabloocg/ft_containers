@@ -82,7 +82,7 @@ class list
         list (const list& x): n_begin(nullptr), n_end(nullptr), list_size(0)
         {
             this->init_list();
-            this->assign(x.cbegin(), x.cend());
+            this->assign(x.begin(), x.end());
         };
 
                     /*         Destructor           */
@@ -98,7 +98,7 @@ class list
 
         list& operator= (const list& x)
         {
-            this->assign(x.cbegin(), x.cend());
+            this->assign(x.begin(), x.end());
             return (*this);
         };
 
@@ -539,9 +539,9 @@ bool operator== (const list<T>& lhs, const list<T>& rhs)
 {
     if (lhs.size() != rhs.size())
         return (false);
-    typename list<T>::const_iterator it = lhs.cbegin();
-    typename list<T>::const_iterator it2 = rhs.cbegin();
-    while (it != lhs.cend())
+    typename list<T>::const_iterator it = lhs.begin();
+    typename list<T>::const_iterator it2 = rhs.begin();
+    while (it != lhs.end())
         if (*it++ != *it2++)
             return (false);
     return (true);
@@ -558,9 +558,9 @@ bool operator<  (const list<T>& lhs, const list<T>& rhs)
 {
     if (lhs.size() != rhs.size())
         return (lhs.size() < rhs.size());
-    typename list<T>::const_iterator it = lhs.cbegin();
-    typename list<T>::const_iterator it2 = rhs.cbegin();
-    while (it != lhs.cend())
+    typename list<T>::const_iterator it = lhs.begin();
+    typename list<T>::const_iterator it2 = rhs.begin();
+    while (it != lhs.end())
         if (*it++ < *it2++)
             return (true);
     return (false);

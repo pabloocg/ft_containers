@@ -1,7 +1,9 @@
 #ifndef STACK_TEST_HPP
 # define STACK_TEST_HPP
 
-# include "../stack.hpp"
+# include <stack>
+# include <deque>
+# include <iostream>
 
 template<typename Container>
 void display_container(std::string const &header, Container const &ctn)
@@ -27,7 +29,7 @@ int main()
 {
 	std::cout << "\n---basic\n\n";
 
-	ft::stack<int> empty_stack;
+	std::stack<int> empty_stack;
 	{
 		std::cout << "empty? " << empty_stack.empty() << '\n';
 		std::cout << "empty stack size = " << empty_stack.size() << '\n';
@@ -35,7 +37,7 @@ int main()
 			assert(empty_stack.size() == 0);
 	}
 
-	ft::stack<int> stk;
+	std::stack<int> stk;
 	std::cout << "[] (size: " << stk.size() << ")\n";
 		assert(stk.size() == 0);
 	stk.push(5);
@@ -63,7 +65,7 @@ int main()
 
 	std::cout << "\n---with container\n\n";
 	{
-		ft::list<int> ctn;
+		std::deque<int> ctn;
 		ctn.push_back(5);
 		ctn.push_back(42);
 		ctn.push_back(43);
@@ -71,7 +73,7 @@ int main()
 		display_container("[5, 42, 43, 99] {List or Deque}:", ctn);
 			assert(ctn.size() == 4);
 
-		ft::stack<int> stk(ctn);
+		std::stack<int> stk(ctn);
 		std::cout << "stack empty? " << stk.empty() << '\n';
 		std::cout << "stack size = " << stk.size() << '\n';
 			assert(!stk.empty());
@@ -96,28 +98,28 @@ int main()
 		std::cout << "[] (size: " << stk.size() << ")\n";
 			assert(stk.size() == 0);
 
-		display_container("[5, 42, 43, 99] {ft::List after, no change}:", ctn);
+		display_container("[5, 42, 43, 99] {std::List after, no change}:", ctn);
 	}
 
 	std::cout << "\n---comparison\n\n";
 	{
-		ft::stack<int> stk;
+		std::stack<int> stk;
 		stk.push(5);
 		stk.push(42);
 		assert(stk.size() == 2);
 
-		ft::stack<int> stk2;
+		std::stack<int> stk2;
 		stk2.push(5);
 		stk2.push(42);
 		assert(stk2.size() == 2);
 
-		ft::stack<int> stk3;
+		std::stack<int> stk3;
 		stk3.push(5);
 		stk3.push(42);
 		stk3.push(43);
 		assert(stk3.size() == 3);
 
-		ft::stack<int> stk4;
+		std::stack<int> stk4;
 		stk4.push(99);
 		stk4.push(5);
 		stk4.push(42);
