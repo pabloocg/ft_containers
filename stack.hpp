@@ -4,7 +4,7 @@
 
 namespace ft
 {
-    template <typename T, class Container = ft::list<T> >
+    template <typename T, class Container = list<T> >
     class stack
     {
 
@@ -16,15 +16,16 @@ namespace ft
             typedef Container   container_type;
             typedef size_t      size_type;
         
-        //private:
+        private:
             container_type  c;
 
             /*                      Member Functions                       */
         public:
-                            /*       Constructor Types      */
-            /*Default Constructor*/
+
             explicit stack (const container_type& ctnr = container_type()): c(ctnr) {};
+
             stack(const stack &other): c(other.c) {};
+
             virtual ~stack() {};
 
 
@@ -62,45 +63,46 @@ namespace ft
                 this->c = other.c;
                 return (*this);
             };
+
+            // The keyword friend is allowed in non-member functiones overload
+            /*          Non-member function overloads               */
+            template <typename T, class Container>
+            friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c == rhs.c);
+            };
+
+            template <typename T, class Container>
+            friend bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c != rhs.c);
+            };
+
+            template <typename T, class Container>
+            friend bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c < rhs.c);
+            };
+
+            template <typename T, class Container>
+            friend bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c <= rhs.c);
+            };
+
+            template <typename T, class Container>
+            friend bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c > rhs.c);
+            };
+
+            template <typename T, class Container>
+            friend bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+            {
+                return (lhs.c >= rhs.c);
+            };
     };
 
-/*          Non-member function overloads               */
-
-template <typename T, class Container>
-bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c == rhs.c);
-};
-
-template <typename T, class Container>
-bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c != rhs.c);
-};
-
-template <typename T, class Container>
-bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c < rhs.c);
-};
-
-template <typename T, class Container>
-bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c <= rhs.c);
-};
-
-template <typename T, class Container>
-bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c > rhs.c);
-};
-
-template <typename T, class Container>
-bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-{
-    return (lhs.c >= rhs.c);
-};
 
 }
 
