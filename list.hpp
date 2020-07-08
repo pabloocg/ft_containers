@@ -110,10 +110,22 @@ class list
             return (iterator(this->n_begin));
         };
 
+        /*Return const_iterator to beginning*/
+        const_iterator begin() const
+        {
+            return (const_iterator(this->n_begin));
+        };
+
         /*Return iterator to end*/
         iterator end()
         {
             return (iterator(this->n_end));
+        };
+
+        /*Return const_iterator to end*/
+        const_iterator end() const
+        {
+            return (const_iterator(this->n_end));
         };
 
         /*Return reverse iterator to reverse beginning*/
@@ -122,32 +134,20 @@ class list
             return (reverse_iterator(this->end()));
         };
 
+        /*Return const_reverse_iterator to reverse beginning*/
+        const_reverse_iterator rbegin() const
+        {
+            return (const_reverse_iterator(this->cend()));
+        };
+
         /*Return reverse iterator to reverse end*/
         reverse_iterator rend()
         {
             return (reverse_iterator(this->begin()));
         };
 
-        /*Return const_iterator to beginning*/
-        const_iterator cbegin() const
-        {
-            return (const_iterator(this->n_begin));
-        };
-
-        /*Return const_iterator to end*/
-        const_iterator cend() const
-        {
-            return (const_iterator(this->n_end));
-        };
-
-        /*Return const_reverse_iterator to reverse beginning*/
-        const_reverse_iterator crbegin() const
-        {
-            return (const_reverse_iterator(this->cend()));
-        };
-
         /*Return const_reverse_iterator to reverse end*/
-        const_reverse_iterator crend() const
+        const_reverse_iterator rend() const
         {
             return (const_reverse_iterator(this->cbegin()));
         };
