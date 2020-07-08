@@ -452,7 +452,7 @@ class list
         /*Merge sorted lists*/
         void merge (list& x)
         {
-            this->merge(x, &less<value_type>);
+            this->merge(x, &ft::less<value_type>);
         };
 
         template <class Compare>
@@ -480,7 +480,7 @@ class list
         /*Sort elements in container*/
         void sort()
         {
-            this->sort(&less<value_type>);
+            this->sort(&ft::less<value_type>);
         };
 
         template <class Compare>
@@ -493,7 +493,6 @@ class list
                 it = this->begin();
                 for (iterator it2 = this->begin() + 1; it2 != this->end(); it2++)
                 {
-                    //std::cout << *it << "--" << *it2 << std::endl;
                     if (it != it2 && (*comp)(*it2, *it))
                     {
                         it.get_pointer()->swap(it2.get_pointer());
@@ -502,7 +501,6 @@ class list
                         else if (it2 == this->begin())
                             this->n_begin = it.get_pointer();
                         it2 = it;
-                        //std::cout << "inside ->" << *it << "--" << *it2 << std::endl;
                     }
                     else
                         it++;

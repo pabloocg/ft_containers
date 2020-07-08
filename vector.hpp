@@ -16,18 +16,18 @@ namespace ft
 
         public:
 
-            typedef T                                                   value_type;
-            typedef Alloc                                               allocator_type;
-            typedef value_type                  &                       reference;
-            typedef value_type const            &                       const_reference;
-            typedef value_type                  *                       pointer;
-            typedef value_type const            *                       const_pointer;
-            //typedef IteratorList<value_type, node_type>                iterator;
-            //typedef IteratorList<value_type const, node_type const>    const_iterator;
-            //typedef ReverseIterator<iterator>                          reverse_iterator;
-            //typedef ReverseIterator<const_iterator>                    const_reverse_iterator;
-            typedef std::ptrdiff_t                                      difference_type;
-            typedef size_t                                              size_type;
+            typedef T                                   value_type;
+            typedef Alloc                               allocator_type;
+            typedef value_type                  &       reference;
+            typedef value_type const            &       const_reference;
+            typedef value_type                  *       pointer;
+            typedef value_type const            *       const_pointer;
+            //typedef IteratorList<value_type>          iterator;
+            //typedef IteratorList<value_type const>    const_iterator;
+            //typedef ReverseIterator<iterator>         reverse_iterator;
+            //typedef ReverseIterator<const_iterator>   const_reverse_iterator;
+            typedef std::ptrdiff_t                      difference_type;
+            typedef size_t                              size_type;
         
         private:
 
@@ -136,11 +136,6 @@ namespace ft
 
             //Removes all elements from the vector (which are destroyed), leaving the container with a size of 0
             void clear();
-
-        /*              Allocator                       */
-
-            //Returns a copy of the allocator object associated with the vector
-            allocator_type get_allocator() const;
 
     };
 
