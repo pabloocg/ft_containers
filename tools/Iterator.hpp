@@ -115,32 +115,32 @@ namespace ft
 
             bool operator== (const Iterator & other) const
             {
-                return (*this->__p == *other.___p;
+                return (*this->__p == *other.__p);
             };
 
             bool operator!= (const Iterator & other) const
             {
-                return (*this->__p != *other.___p;
+                return (*this->__p != *other.__p);
             };
 
             bool operator>= (const Iterator & other) const
             {
-                return (*this->__p >= *other.___p;
+                return (*this->__p >= *other.__p);
             };
 
             bool operator<= (const Iterator & other) const
             {
-                return (*this->__p <= *other.___p;
+                return (*this->__p <= *other.__p);
             };
 
             bool operator< (const Iterator & other) const
             {
-                return *(this->__p < *other.___p;
+                return *(this->__p < *other.__p);
             };
 
             bool operator> (const Iterator & other) const
             {
-                return *(this->__p > *other.___p;
+                return *(this->__p > *other.__p);
             };
 
     };
