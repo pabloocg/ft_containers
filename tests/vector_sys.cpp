@@ -1,14 +1,13 @@
-#ifndef VECTOR_TEST_CPP
-# define VECTOR_TEST_CPP
-
-# include "../vector.hpp"
+#ifndef VECTOR_SYS_CPP
+# define VECTOR_SYS_CPP
+# include <vector>
 # include <iostream>
 # include "utils.cpp"
 
 
-void	vector_test(void)
+void	vector_sys(void)
 {
-    ft::vector<int> vec;
+    std::vector<int> vec;
 
     std::cout << vec.capacity() << std::endl;
     vec.push_back(4);

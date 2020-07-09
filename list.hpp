@@ -452,7 +452,7 @@ class list
         /*Merge sorted lists*/
         void merge (list& x)
         {
-            this->merge(x, &ft::less<value_type>);
+            this->merge(x, &less_than<value_type>);
         };
 
         template <class Compare>
@@ -480,7 +480,7 @@ class list
         /*Sort elements in container*/
         void sort()
         {
-            this->sort(&ft::less<value_type>);
+            this->sort(&less_than<value_type>);
         };
 
         template <class Compare>

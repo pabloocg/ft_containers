@@ -1,64 +1,12 @@
-#ifndef LIST_TEST_HPP
-# define LIST_TEST_HPP
+#ifndef LIST_SYS_HPP
+# define LIST_SYS_HPP
 
 # include <list>
 # include <iostream>
+# include "utils.cpp"
 
 
-template<typename Container>
-void display_container(std::string const &header, Container const &ctn)
-{
-	typename Container::const_iterator it = ctn.cbegin();
-	typename Container::const_iterator ite = ctn.cend();
-	std::cout << header;
-	if (it == ite)
-		std::cout << " empty !";
-	std::cout << '\n';
-	while (it != ite)
-	{
-		std::cout << *it;
-		if (++it == ite)
-			std::cout << '\n';
-		else
-			std::cout <<  ", ";
-	}
-}
-
-template<typename T>
-bool less_than_99(T const &nbr) {
-	return (nbr < 99);
-}
-
-template<typename T>
-bool less_than_43(T const &nbr) {
-	return (nbr < 43);
-}
-
-template<typename T>
-bool less_than_1(T const &nbr) {
-	return (nbr < 1);
-}
-
-template<typename T>
-bool lesser_than_rhs(T const &nbr1, T const &nbr2) {
-	return (nbr1 <= nbr2);
-}
-
-template<typename T>
-bool sort_desc(T const &nbr1, T const &nbr2) {
-	return (nbr1 > nbr2);
-}
-
-bool same_integral_part(double first, double second) {
-	return (int(first) == int(second));
-}
-
-template<typename T>
-bool equal_plus_one(T first, T second) {
-	return (second == (first + 1));
-}
-
-int main(void)
+void	list_sys(void)
 {
 	std::cout << "\n---basic\n\n";
 	{
@@ -99,15 +47,15 @@ int main(void)
 		int i = 1;
 		display_container("[5, 42, 3]:", lst);
 
-		typename std::list<int>::reverse_iterator rit = lst.rbegin();
-		typename std::list<int>::reverse_iterator rite = lst.rend();
+		std::list<int>::reverse_iterator rit = lst.rbegin();
+		std::list<int>::reverse_iterator rite = lst.rend();
 		i = 1;
 		std::cout << "(reverse) [5, 42, 3]:" << '\n';
 		while (rit != rite)
 			std::cout << i++ << " -> " << *rit++ << '\n';
 
-		typename std::list<int>::iterator it = lst.begin();
-		typename std::list<int>::iterator ite = lst.end();
+		std::list<int>::iterator it = lst.begin();
+		std::list<int>::iterator ite = lst.end();
 		std::cout << "pop_back from [5, 42, 3]:" << '\n';
 		for (size_t i = 0; i < 3; i++) {
 			lst.pop_back();
@@ -135,15 +83,15 @@ int main(void)
 		display_container("[5, 42, 3]:", lst);
 			assert(lst.size() == 3);
 
-		typename std::list<int>::reverse_iterator rit = lst.rbegin();
-		typename std::list<int>::reverse_iterator rite = lst.rend();
+		std::list<int>::reverse_iterator rit = lst.rbegin();
+		std::list<int>::reverse_iterator rite = lst.rend();
 		int i = 1;
 		std::cout << "(reverse) [5, 42, 3]:" << '\n';
 		while (rit != rite)
 			std::cout << i++ << " -> " << *rit++ << '\n';
 
-		typename std::list<int>::iterator it;
-		typename std::list<int>::iterator ite;
+		std::list<int>::iterator it;
+		std::list<int>::iterator ite;
 		std::cout << "pop_front from [5, 42, 3]:" << '\n';
 		for (size_t i = 0; i < 3; i++) {
 			lst.pop_front();
@@ -196,7 +144,7 @@ int main(void)
 		display_container("42 deleted [5, 3]:", lst);
 			assert(lst.size() == 2);
 
-		typename std::list<int>::iterator it = lst.erase(--lst.end());
+		std::list<int>::iterator it = lst.erase(--lst.end());
 		std::cout << "deleted [end] -> ";
 			assert(it == lst.end());
 
@@ -475,7 +423,7 @@ int main(void)
 		lst.merge(lst2, &lesser_than_rhs<int>);
 
 		std::cout << "lst size "<< lst.size() << ", lst2 size " << lst2.size() << '\n';
-		std::cout << "lst2 empty ? " << lst2.size() << '\n';
+		std::cout << "lst2 empty ? " << lst2.empty() << '\n';
 		display_container("[5, 5, 12, 28, 42, 43, 44, 45] {lst after merge}:", lst);
 			assert(lst.size() == 8);
 		display_container("empty lst2 after merge []:", lst2);
@@ -739,9 +687,7 @@ int main(void)
             assert(lst2.back() == 60);
             assert(lst2.size() == 3);
 	}
-
 	std::cout << '\n';
-	return (0);
 }
 
 #endif

@@ -40,12 +40,16 @@ namespace ft
         /*                  Member functions                */
         public:
             //empty container constructor (default constructor)
-            explicit vector (const allocator_type& alloc = allocator_type()): __c(nullptr), __size(0), __capacity(0) {};
+            explicit vector (const allocator_type& alloc = allocator_type()): __c(nullptr), __size(0), __capacity(0)
+            {
+                (void)alloc;
+            };
 
             /*      Constructs a container with n elements. Each element is a copy of val.      */
             explicit vector (size_type n, const value_type& val = value_type(),
                             const allocator_type& alloc = allocator_type())
             {
+                (void)alloc;
                 this->assign(n, val);
             };
 
@@ -54,6 +58,7 @@ namespace ft
             vector (InputIterator first, InputIterator last,
                     const allocator_type& alloc = allocator_type())
             {
+                (void)alloc;
                 this->assign(first, last);
             };
 

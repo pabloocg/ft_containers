@@ -2,28 +2,9 @@
 # define STACK_TEST_HPP
 
 # include "../stack.hpp"
+# include "utils.cpp"
 
-template<typename Container>
-void display_container(std::string const &header, Container const &ctn)
-{
-	typename Container::const_iterator it = ctn.begin();
-	typename Container::const_iterator ite = ctn.end();
-	std::cout << header;
-	if (it == ite)
-		std::cout << " empty !";
-	std::cout << '\n';
-	while (it != ite)
-	{
-		std::cout << *it;
-		if (++it == ite)
-			std::cout << '\n';
-		else
-			std::cout <<  ", ";
-	}
-}
-
-
-int main()
+void	stack_test(void)
 {
 	std::cout << "\n---basic\n\n";
 
