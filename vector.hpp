@@ -10,7 +10,6 @@
 
 /*
     - Reserve function line 184
-    - Insert's function line 278
     - Erase function 289
     - All operators
     - Pass Tests
@@ -276,9 +275,48 @@ namespace ft
                 return (position);
             };
 
-            void insert (iterator position, size_type n, const value_type& val);
+            void insert (iterator position, size_type n, const value_type& val)
+            {
+                size_type new_size = this->size + n;
+
+                if (new_size > this->__capacity)
+                    this->reserve(new_size * 2);
+                if (this->empty())
+                    for (size_t i = 0; i < n; i++)
+                        this->__c[i] = val;
+                else
+                {
+                    size_type posIt = ft::distance(this->begin(), position);
+                    size_type finalPos = this->__size - posIt;
+                    for (size_type i = posIt; i < finalPos; i++)
+                        this->__c[i + n] = this->__c[i];
+                    for (size_type i = posIt; i < n; i++)
+                        this->__c[i] = val;
+                }
+                this->__size += n;
+            };
             template <class InputIterator>
-            void insert (iterator position, InputIterator first, InputIterator last);
+            void insert (iterator position, InputIterator first, InputIterator last)
+            {
+                size_type n = ft::distance(first, last);
+                size_type new_size = this->size + n;
+
+                if (new_size > this->__capacity)
+                    this->reserve(new_size * 2);
+                if (this->empty())
+                    for (size_type i = 0; first != last; i++)
+                        this->__c[i] = *first++;
+                else
+                {
+                    size_type posIt = ft::distance(this->begin(), position);
+                    size_type finalPos = this->__size - posIt;
+                    for (size_type i = posIt; i < finalPos; i++)
+                        this->__c[i + n] = this->__c[i];
+                    for (size_type i = posIt; first != last; i++)
+                        this->__c[i] = *first++;
+                }
+                this->__size += n;
+            };
 
             //Removes from the vector either a single element (position) or a range of elements ([first,last))
             iterator erase (iterator position)

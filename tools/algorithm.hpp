@@ -6,6 +6,19 @@
 namespace ft
 {
 
+    template<class Iterator>
+    size_t  distance(Iterator & it1, Iterator & it2)
+    {
+        size_t  dis = 0;
+
+        while (it1 != it2)
+        {
+            it2--;
+            dis++;
+        }
+        return (dis);
+    }
+
     template <typename T>
 	void swap(T &a, T &b)
 	{
