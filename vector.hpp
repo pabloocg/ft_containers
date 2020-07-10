@@ -6,7 +6,15 @@
 # include <limits>
 # include <memory>
 # include <iostream>
+# include <stdexcept>
 
+/*
+    - Reserve function line 184
+    - Insert's function line 278
+    - Erase function 289
+    - All operators
+    - Pass Tests
+*/
 namespace ft
 {
 
@@ -69,8 +77,7 @@ namespace ft
                 this->__capacity = x.capacity();
                 if (this->__size > 0)
                     this->__c = new value_type[this->__size]();
-                for (size_type i = 0; i < this->__size; i++)
-                    this->__c[i] = x[i];
+                for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
             };
 
             /*          Destructor          */
@@ -91,8 +98,7 @@ namespace ft
                 if (this->__size > 0)
                 {
                     this->__c = new value_type[this->__size]();
-                    for (size_type i = 0; i < this->__size; i++)
-                        this->__c[i] = x[i];
+                    for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
                 }
                 return (*this);
             };
@@ -141,7 +147,7 @@ namespace ft
 
         /*              Capacity                                */
 
-            //Return size
+            //Return container size
             size_type size() const
             {
                 return (this->__size);
@@ -155,7 +161,13 @@ namespace ft
             };
 
             //Resizes the container so that it contains n elements
-            void resize (size_type n, value_type val = value_type());
+            void resize (size_type n, value_type val = value_type())
+            {
+                if (this->__size < n)
+                    this->insert(this->end(), n - this->__size, val);
+                else if (n >= 0 && this->__size > n)
+                    this->erase(this->begin() + n, this->end());
+            };
 
             //Returns the size of the storage space currently allocated for the vector, expressed in terms of elements
             size_type capacity() const
@@ -171,14 +183,14 @@ namespace ft
 
             //Requests that the vector capacity be at least enough to contain n elements
             void reserve (size_type n);
-            
+
         /*          Element Access                      */
 
             //Returns a reference to the element at position n in the vector container
             reference operator[] (size_type n)
             {
                 if (n < 0 || n >= this->__size)
-                    throw "Vector Exception: Outbound of limits";
+                    throw std::out_of_range("Vector Exception: Out of range");
                 else
                     return (this->__c[n]);
             };
@@ -186,7 +198,7 @@ namespace ft
             const_reference operator[] (size_type n) const
             {
                 if (n < 0 || n >= this->__size)
-                    throw "Vector Exception: Outbound of limits";
+                    throw std::out_of_range("Vector Exception: Out of range");
                 else
                     return (this->__c[n]);
             };
@@ -195,7 +207,7 @@ namespace ft
             reference at (size_type n)
             {
                 if (n < 0 || n >= this->__size)
-                    throw "Vector Exception: Outbound of limits";
+                    throw std::out_of_range("Vector Exception: Out of range");
                 else
                     return (this->__c[n]);
             };
@@ -203,7 +215,7 @@ namespace ft
             const_reference at (size_type n) const
             {
                 if (n < 0 || n >= this->__size)
-                    throw "Vector Exception: Outbound of limits";
+                    throw std::out_of_range("Vector Exception: Out of range");
                 else
                     return (this->__c[n]);
             };
@@ -211,54 +223,84 @@ namespace ft
             //Returns a reference to the first element in the vector
             reference front()
             {
-                return (this->__c[0]);
+                return (*this->begin());
             };
 
             const_reference front() const
             {
-                return (this->__c[0]);
+                return (*this->begin());
             };
             
             //Returns a reference to the last element in the vector
             reference back()
             {
-                return (this->__c[this->__size]);
+                return (*--this->end());
             };
 
             const_reference back() const
             {
-                return (this->__c[this->__size]);
+                return (*--this->end());
             };
 
         /*          Modifiers                               */
+
             //Assigns new contents to the vector, replacing its current contents, and modifying its size accordingly
-            void assign (iterator first, iterator last);
-            void assign (size_type n, const value_type& val);
+            void assign (iterator first, iterator last)
+            {
+                this->clear();
+                this->insert(this->begin(), first, last);
+            };
+
+            void assign (size_type n, const value_type& val)
+            {
+                this->clear();
+                this->insert(this->begin(), n, val);
+            };
 
             //Adds a new element at the end of the vector, after its current last element. The content of val is copied (or moved) to the new element
             void push_back (const value_type& val)
             {
-                new (&this->__c[this->__size++]) value_type(val);
+                this->insert(this->end(), val);
             };
 
             //Removes the last element in the vector, effectively reducing the container size by one
-            void pop_back();
+            void pop_back()
+            {
+                this->erase(--this->end());
+            };
 
             //Insert elements
-            iterator insert (iterator position, const value_type& val);
+            iterator insert (iterator position, const value_type& val)
+            {
+                this->insert(position, 1, val);
+                return (position);
+            };
+
             void insert (iterator position, size_type n, const value_type& val);
             template <class InputIterator>
             void insert (iterator position, InputIterator first, InputIterator last);
 
             //Removes from the vector either a single element (position) or a range of elements ([first,last))
-            iterator erase (iterator position);
+            iterator erase (iterator position)
+            {
+                return (this->erase(position, position + 1));
+            };
+
             iterator erase (iterator first, iterator last);
 
             //Exchanges the content of the container by the content of x, which is another vector object of the same type. Sizes may differ
-            void swap (vector& x);
+            void swap (vector& x)
+            {
+                ft::swap(this->__size, x.__size);
+                ft::swap(this->__capacity, x.__capacity);
+                ft::swap(this->__c, x.__c);
+            };
 
             //Removes all elements from the vector (which are destroyed), leaving the container with a size of 0
-            void clear();
+            void clear()
+            {
+                this->erase(this->begin(), this->end());
+            };
 
     };
 
@@ -281,7 +323,10 @@ template <typename T, class Alloc>
 bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 
 template <typename T, class Alloc>
-void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
+void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+{
+    x.swap(y);
+};
 
 }
 

@@ -39,7 +39,7 @@ queue:		$(NAME)
 
 vector:		$(NAME)
 			./${NAME} vector_test > FT_VECTOR.TXT
-			./${NAME} queue_sys > STD_VECTOR.TXT
+			./${NAME} vector_sys > STD_VECTOR.TXT
 
 txt:
 			rm *.TXT
