@@ -9,7 +9,6 @@
 #include <stdexcept>
 
 /*
-    - Reserve function line 184
     - All operators
     - Pass Tests
 */
@@ -181,7 +180,27 @@ public:
     };
 
     //Requests that the vector capacity be at least enough to contain n elements
-    void reserve(size_type n);
+    void reserve(size_type n)
+    {
+        if (!this->__capacity)
+        {
+            this->__c = new value_type[n]();
+            this->__capacity = n;
+        }
+        else if (n > this->__capacity)
+        {
+            size_type new_size = (n > this->__capacity * 2) ? n : this->__capacity * 2;
+            pointer tmp = new value_type[new_size]();
+            if (this->__c)
+            {
+                for (size_type i = 0; i < this->__size; i++)
+                    &tmp[i] = this->__c[i];
+                delete[] this->__c;
+            }
+            this->__c = tmp;
+            this->__capacity = new_size;
+        }
+    };
 
     /*          Element Access                      */
 
