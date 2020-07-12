@@ -10,36 +10,50 @@
 
 /*
     - All operators
-    - Pass Tests
+    - Test pasados
+        - Mirar reverse iterator
+        - Comprobar que el reverse de contenedor list no ha cambiado
 */
 
 namespace ft
 {
 
-template <typename T, class Alloc = std::allocator<T>>
+template <typename T, class Alloc = std::allocator<T> >
 class vector
 {
 
     /*                      Member types                           */
 
 public:
-    typedef T value_type;
-    typedef Alloc allocator_type;
-    typedef value_type &reference;
-    typedef value_type const &const_reference;
-    typedef value_type *pointer;
-    typedef value_type const *const_pointer;
-    typedef Iterator<value_type> iterator;
-    typedef Iterator<value_type const> const_iterator;
-    typedef ReverseIterator<iterator> reverse_iterator;
+    typedef T                               value_type;
+    typedef Alloc                           allocator_type;
+    typedef value_type &                    reference;
+    typedef value_type const &              const_reference;
+    typedef value_type *                    pointer;
+    typedef value_type const *              const_pointer;
+    typedef Iterator<value_type>            iterator;
+    typedef Iterator<value_type const>      const_iterator;
+    typedef ReverseIterator<iterator>       reverse_iterator;
     typedef ReverseIterator<const_iterator> const_reverse_iterator;
-    typedef std::ptrdiff_t difference_type;
-    typedef size_t size_type;
+    typedef std::ptrdiff_t                  difference_type;
+    typedef size_t                          size_type;
 
 private:
     pointer __c;
     size_type __size;
     size_type __capacity;
+
+    size_type  distance(iterator it1, iterator it2)
+    {
+        size_type  dis = 0;
+
+        while (it1 != it2)
+        {
+            ++it1;
+            dis++;
+        }
+        return (dis);
+    }
 
     /*                  Member functions                */
 public:
@@ -51,7 +65,7 @@ public:
 
     /*      Constructs a container with n elements. Each element is a copy of val.      */
     explicit vector(size_type n, const value_type &val = value_type(),
-                    const allocator_type &alloc = allocator_type())
+                    const allocator_type &alloc = allocator_type()) : __c(nullptr), __size(0), __capacity(0)
     {
         (void)alloc;
         this->assign(n, val);
@@ -60,7 +74,7 @@ public:
     /*              Range constructor        */
     template <class InputIterator>
     vector(InputIterator first, InputIterator last,
-           const allocator_type &alloc = allocator_type())
+           const allocator_type &alloc = allocator_type()): __c(nullptr), __size(0), __capacity(0)
     {
         (void)alloc;
         this->assign(first, last);
@@ -73,8 +87,7 @@ public:
         this->__capacity = x.capacity();
         if (this->__size > 0)
             this->__c = new value_type[this->__size]();
-        for (size_type i = 0; i < this->__size; i++)
-            this->__c[i] = x[i];
+        for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
     };
 
     /*          Destructor          */
@@ -82,22 +95,18 @@ public:
     {
         if (this->__c != nullptr)
             delete[] this->__c;
-        this->__size = 0;
+        this->__capacity = this->__size = 0;
     };
 
     /*      Copies all the elements from x into the container       */
     vector &operator=(const vector &x)
     {
-        if (this->__size > 0)
-            delete[] this->__c;
-        this->__c = nullptr;
+        this->clear();
         this->__size = x.size();
-        if (this->__size > 0)
-        {
-            this->__c = new value_type[this->__size]();
-            for (size_type i = 0; i < this->__size; i++)
-                this->__c[i] = x[i];
-        }
+        if (this->__capacity < x.capacity())
+            this->reserve(x.capacity());
+        for (size_type i = 0; i < this->__size; i++)
+            this->__c[i] = x[i];
         return (*this);
     };
 
@@ -115,12 +124,12 @@ public:
 
     iterator end()
     {
-        return (iterator(this->__c + this->__size));
+        return (iterator(&(this->__c[this->__size])));
     };
 
     const_iterator end() const
     {
-        return (const_iterator(this->__c + this->__size));
+        return (const_iterator(&(this->__c[this->__size])));
     };
 
     reverse_iterator rbegin()
@@ -154,8 +163,7 @@ public:
     //Return maximum size
     size_type max_size() const
     {
-        //Check
-        return (std::numeric_limits<size_type>::max() / sizeof(pointer));
+        return (std::numeric_limits<size_type>::max() / sizeof(value_type));
     };
 
     //Resizes the container so that it contains n elements
@@ -182,19 +190,13 @@ public:
     //Requests that the vector capacity be at least enough to contain n elements
     void reserve(size_type n)
     {
-        if (!this->__capacity)
-        {
-            this->__c = new value_type[n]();
-            this->__capacity = n;
-        }
-        else if (n > this->__capacity)
+        if (n > this->__capacity)
         {
             size_type new_size = (n > this->__capacity * 2) ? n : this->__capacity * 2;
             pointer tmp = new value_type[new_size]();
             if (this->__c)
             {
-                for (size_type i = 0; i < this->__size; i++)
-                    &tmp[i] = this->__c[i];
+                for (size_type i = 0; i < this->__size; i++) tmp[i] = this->__c[i];
                 delete[] this->__c;
             }
             this->__c = tmp;
@@ -290,50 +292,39 @@ public:
     //Insert elements
     iterator insert(iterator position, const value_type &val)
     {
+        size_type posIt = this->distance(this->begin(), position);
         this->insert(position, 1, val);
-        return (position);
+        return (iterator(this->begin() + posIt));
     };
 
     void insert(iterator position, size_type n, const value_type &val)
     {
-        size_type new_size = this->size + n;
+        size_type new_size = this->__size + n;
+        iterator it = this->begin();
 
         if (new_size > this->__capacity)
-            this->reserve(new_size * 2);
-        if (this->empty())
-            for (size_t i = 0; i < n; i++)
-                this->__c[i] = val;
-        else
-        {
-            size_type posIt = ft::distance(this->begin(), position);
-            size_type finalPos = this->__size - posIt;
-            for (size_type i = posIt; i < finalPos; i++)
-                this->__c[i + n] = this->__c[i];
-            for (size_type i = posIt; i < n; i++)
-                this->__c[i] = val;
-        }
+            this->reserve(new_size);
+        size_type posIt = this->distance(it, position);
+        for (size_type i = this->__size; i > posIt; i--)
+            this->__c[i + n - 1] = this->__c[i - 1];
+        for (size_type i = 0; i < n; i++)
+            this->__c[i + posIt] = val;
         this->__size += n;
     };
-    template <class InputIterator>
-    void insert(iterator position, InputIterator first, InputIterator last)
+
+    void insert(iterator position, iterator first, iterator last)
     {
-        size_type n = ft::distance(first, last);
-        size_type new_size = this->size + n;
+        size_type n = this->distance(first, last);
+        size_type new_size = this->__size + n;
+        iterator it = this->begin();
 
         if (new_size > this->__capacity)
-            this->reserve(new_size * 2);
-        if (this->empty())
-            for (size_type i = 0; first != last; i++)
-                this->__c[i] = *first++;
-        else
-        {
-            size_type posIt = ft::distance(this->begin(), position);
-            size_type finalPos = this->__size - posIt;
-            for (size_type i = posIt; i < finalPos; i++)
-                this->__c[i + n] = this->__c[i];
-            for (size_type i = posIt; first != last; i++)
-                this->__c[i] = *first++;
-        }
+            this->reserve(new_size);
+        size_type posIt = this->distance(it, position);
+        for (size_type i = this->__size; i > posIt; i--)
+            this->__c[i + n - 1] = this->__c[i - 1];
+        for (size_type i = 0; i < n; i++)
+            this->__c[i + posIt] = *first++;
         this->__size += n;
     };
 
@@ -345,17 +336,12 @@ public:
 
     iterator erase(iterator first, iterator last)
     {
-        size_type posIt = ft::distance(this->begin(), first);
-        size_type n = ft::distance(first, last);
+        size_type posIt = this->distance(this->begin(), first);
+        size_type n = this->distance(first, last);
 
-        for (iterator it = first; it != last; it++)
-            &*it = value_type();
+        for (iterator it = first; it != last; it++) *it = value_type();
         if (last < this->end())
-            for (iterator it = first; last != this->end(); ++it)
-            {
-                &*it = *last++;
-                &*last = value_type();
-            }
+            for (iterator it = first; last != this->end(); ++it) *it = *last++;
         this->__size -= n;
         return (iterator(&this->__c[posIt]));
     };

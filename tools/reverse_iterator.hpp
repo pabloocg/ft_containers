@@ -9,8 +9,6 @@ namespace ft
         public:
 
             using typename It::value_type;
-            using typename It::node_type;
-	        using typename It::node_pointer;
             using typename It::reference;
             using typename It::const_reference;
 
@@ -18,7 +16,7 @@ namespace ft
 
             ReverseIterator(): It() {};
             ReverseIterator(It const &other): It(other) {};
-            ReverseIterator(ReverseIterator const &other): It(other.get_pointer()) {};
+            ReverseIterator(ReverseIterator const &other): It(other) {};
 
 
             reference operator* ()
@@ -61,11 +59,11 @@ namespace ft
                 return (this->It::operator++());
             }
 
-            ReverseIterator& operator= (const ReverseIterator & other)
+            /*ReverseIterator& operator= (const ReverseIterator & other)
             {
                 this->pointer = other.get_pointer();
                 return (*this);
-            };
+            };*/
     };    
 }
 

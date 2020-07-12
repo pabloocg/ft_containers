@@ -26,7 +26,7 @@ namespace ft
 
             Iterator& operator++ ()
             {
-                this->__p++;
+                ++this->__p;
                 return (*this);
             };
 
@@ -34,21 +34,13 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                this->__p++;
-                return (tmp);
-            };
-
-            Iterator operator++ (int) const
-            {
-                Iterator   tmp(*this);
-
-                this->__p++;
+                ++this->__p;
                 return (tmp);
             };
 
             Iterator& operator-- ()
             {
-                this->__p--;
+                --this->__p;
                 return (*this);
             };
 
@@ -56,15 +48,7 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                this->__p--;
-                return (tmp);
-            };
-
-            Iterator operator-- (int) const
-            {
-                Iterator   tmp(*this);
-
-                this->__p--;
+                --this->__p;
                 return (tmp);
             };
 
@@ -77,6 +61,16 @@ namespace ft
             {
                 return (*this->__p);
             };
+
+            reference operator[](int val)
+            {
+                return (*(this->__p + val));
+            }
+
+            const_reference operator[](int val) const
+            {
+                return (*(this->__p + val));
+            }
 
             Iterator& operator= (const Iterator & other)
             {
@@ -115,32 +109,32 @@ namespace ft
 
             bool operator== (const Iterator & other) const
             {
-                return (*this->__p == *other.__p);
+                return (this->__p == other.__p);
             };
 
             bool operator!= (const Iterator & other) const
             {
-                return (*this->__p != *other.__p);
+                return (this->__p != other.__p);
             };
 
             bool operator>= (const Iterator & other) const
             {
-                return (*this->__p >= *other.__p);
+                return (this->__p >= other.__p);
             };
 
             bool operator<= (const Iterator & other) const
             {
-                return (*this->__p <= *other.__p);
+                return (this->__p <= other.__p);
             };
 
             bool operator< (const Iterator & other) const
             {
-                return *(this->__p < *other.__p);
+                return (this->__p < other.__p);
             };
 
             bool operator> (const Iterator & other) const
             {
-                return *(this->__p > *other.__p);
+                return (this->__p > other.__p);
             };
 
     };
