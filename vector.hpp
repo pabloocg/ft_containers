@@ -105,8 +105,7 @@ public:
         this->__size = x.size();
         if (this->__capacity < x.capacity())
             this->reserve(x.capacity());
-        for (size_type i = 0; i < this->__size; i++)
-            this->__c[i] = x[i];
+        for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
         return (*this);
     };
 

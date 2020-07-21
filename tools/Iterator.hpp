@@ -54,12 +54,22 @@ namespace ft
 
             reference operator* ()
             {
-                return (*this->__p);
+                return (this->__p->value);
             };
 
             const_reference operator* () const
             {
-                return (*this->__p);
+                return (this->__p->value);
+            };
+
+            reference operator-> ()
+            {
+                return (&this->__p->value);
+            };
+
+            const_reference operator-> () const
+            {
+                return (&this->__p->value);
             };
 
             reference operator[](int val)
