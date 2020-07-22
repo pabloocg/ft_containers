@@ -10,23 +10,24 @@ namespace ft
 
             typedef T                   value_type;
             typedef value_type *        pointer;
+            typedef value_type const *  const_pointer;
             typedef value_type &        reference;
             typedef value_type const &  const_reference;
 
         protected:
 
-            pointer __p;
+            pointer _p;
 
         public:
 
-            Iterator(void): __p(nullptr) {};
-            Iterator(pointer point): __p(point) {};
-            Iterator(Iterator const & other): __p(other.__p) {};
+            Iterator(void): _p(nullptr) {};
+            Iterator(pointer point): _p(point) {};
+            Iterator(Iterator const & other): _p(other._p) {};
             virtual ~Iterator() {};
 
             Iterator& operator++ ()
             {
-                ++this->__p;
+                ++this->_p;
                 return (*this);
             };
 
@@ -34,13 +35,13 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                ++this->__p;
+                ++this->_p;
                 return (tmp);
             };
 
             Iterator& operator-- ()
             {
-                --this->__p;
+                --this->_p;
                 return (*this);
             };
 
@@ -48,43 +49,43 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                --this->__p;
+                --this->_p;
                 return (tmp);
             };
 
             reference operator* ()
             {
-                return (this->__p->value);
+                return (*this->_p);
             };
 
             const_reference operator* () const
             {
-                return (this->__p->value);
+                return (*this->_p);
             };
 
-            reference operator-> ()
+            pointer operator-> ()
             {
-                return (&this->__p->value);
+                return (*&this->_p);
             };
 
-            const_reference operator-> () const
+            const_pointer operator-> () const
             {
-                return (&this->__p->value);
+                return (*&this->_p);
             };
 
             reference operator[](int val)
             {
-                return (*(this->__p + val));
+                return (*(this->_p + val));
             }
 
             const_reference operator[](int val) const
             {
-                return (*(this->__p + val));
+                return (*(this->_p + val));
             }
 
             Iterator& operator= (const Iterator & other)
             {
-                this->__p = other.__p;
+                this->_p = other._p;
                 return (*this);
             };
 
@@ -93,7 +94,7 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                tmp.__p = tmp.__p + val;
+                tmp._p = tmp._p + val;
                 return (tmp);
             };
 
@@ -101,50 +102,50 @@ namespace ft
             {
                 Iterator   tmp(*this);
 
-                tmp.__p = tmp.__p - val;
+                tmp._p = tmp._p - val;
                 return (tmp);
             };
 
             Iterator&   operator+= (int val)
             {
-                this->__p = this->__p + val;
+                this->_p = this->_p + val;
                 return (*this);
             };
 
             Iterator&   operator-= (int val)
             {
-                this->__p = this->__p - val;
+                this->_p = this->_p - val;
                 return (*this);
             };
 
             bool operator== (const Iterator & other) const
             {
-                return (this->__p == other.__p);
+                return (this->_p == other._p);
             };
 
             bool operator!= (const Iterator & other) const
             {
-                return (this->__p != other.__p);
+                return (this->_p != other._p);
             };
 
             bool operator>= (const Iterator & other) const
             {
-                return (this->__p >= other.__p);
+                return (this->_p >= other._p);
             };
 
             bool operator<= (const Iterator & other) const
             {
-                return (this->__p <= other.__p);
+                return (this->_p <= other._p);
             };
 
             bool operator< (const Iterator & other) const
             {
-                return (this->__p < other.__p);
+                return (this->_p < other._p);
             };
 
             bool operator> (const Iterator & other) const
             {
-                return (this->__p > other.__p);
+                return (this->_p > other._p);
             };
 
     };

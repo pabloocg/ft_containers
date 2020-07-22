@@ -2,11 +2,17 @@
 # define MAP_HPP
 # include "tools/algorithm.hpp"
 # include "tools/reverse_iterator.hpp"
-# include "tools/IteratorMap.hpp"
 # include <limits>
 # include <memory>
 # include <utility>
 # include "vector.hpp"
+
+/*
+    Hacer funcion insert que use el Compare y ordene los valores.
+
+
+*/
+
 
 namespace ft
 {
@@ -14,7 +20,7 @@ namespace ft
         typename Key,
         typename T,
         class Compare = ft::less<Key>,
-        class Alloc = std::allocator<std::pair<const Key, T> > >
+        class Alloc = std::allocator<std::pair<Key, T> > >
     class map
     {
          /*                      Member types                           */
@@ -23,7 +29,7 @@ namespace ft
 
             typedef Key                                     key_type;
             typedef T                                       mapped_type;
-            typedef std::pair<const key_type, mapped_type>  value_type;
+            typedef std::pair<key_type, mapped_type>        value_type;
             typedef Compare                                 key_compare;
             typedef Compare                                 value_compare;
             typedef Alloc                                   allocator_type;
@@ -31,8 +37,8 @@ namespace ft
             typedef value_type const            &           const_reference;
             typedef value_type                  *           pointer;
             typedef value_type const            *           const_pointer;
-            typedef IteratorMap<value_type>                 iterator;
-            typedef IteratorMap<value_type const>           const_iterator;
+            typedef Iterator<value_type>                    iterator;
+            typedef Iterator<value_type const>              const_iterator;
             typedef ReverseIterator<iterator>               reverse_iterator;
             typedef ReverseIterator<const_iterator>         const_reverse_iterator;
             typedef std::ptrdiff_t                          difference_type;
@@ -46,19 +52,17 @@ namespace ft
 
         public:
 
-            explicit map (const key_compare& comp = key_compare(),
-                            const allocator_type& alloc = allocator_type()): _size_map(0), _c(nullptr)
+            map (const key_compare& comp = key_compare(),
+                    const allocator_type& alloc = allocator_type()): _c(), _size_map(0), _f(comp)
             {
-                this->_f = comp;
                 (void)alloc;
             };
 
             template <class InputIterator>
             map (InputIterator first, InputIterator last,
                 const key_compare& comp = key_compare(),
-                const allocator_type& alloc = allocator_type())
+                const allocator_type& alloc = allocator_type()): _c(), _size_map(0), _f(comp)
             {
-                this->_f = comp;
                 (void)alloc;
                 insert(first, last);
             };
@@ -72,7 +76,8 @@ namespace ft
             /*          Destructor          */
             virtual ~map()
             {
-                clear();
+                if (this->_size_map > 0)
+                    clear();
             };
 
             /*      Copies all the elements from x into the container       */
@@ -87,42 +92,42 @@ namespace ft
 
             iterator begin()
             {
-                return (iterator(this->_c[0]));
+                return (this->_c.begin());
             };
 
             const_iterator begin() const
             {
-                return (const_iterator(this->_c[0]));
+                return (this->_c.begin());
             };
 
             iterator end()
             {
-                return (iterator(this->_c[this->_size_map]));
+                return (this->_c.end());
             };
 
             const_iterator end() const
             {
-                return (const_iterator(this->_c[this->_size_map]));
+                return (this->_c.end());
             };
 
             reverse_iterator rbegin()
             {
-                return (reverse_iterator(this->end()));
+                return (this->_c.rbegin());
             };
 
             const_reverse_iterator rbegin() const
             {
-                return (const_reverse_iterator(this->end()));
+                return (this->_c.rbegin());
             };
 
             reverse_iterator rend()
             {
-                return (reverse_iterator(this->begin()));
+                return (this->_c.rend());
             };
 
             const_reverse_iterator rend() const
             {
-                return (const_reverse_iterator(this->begin()));
+                return (this->_c.rend());
             };
 
         /*              Capacity                                */
@@ -163,18 +168,20 @@ namespace ft
             {
                 iterator    rep;
 
-                if ((rep = find(val.first)))
+                rep = find(val.first);
+                if (rep != this->end())
                     return (std::make_pair(rep, false));
-                this->_c.push_back(val);
+                rep = this->_c.insert(this->end(), val);
                 this->_size_map++;
-                return (std::make_pair(iterator(val), true));
+                return (std::make_pair(rep, true));
             };
 
             iterator                    insert(iterator position, const_reference val)
             {
                 iterator    rep;
 
-                if ((rep = find(val.first)))
+                rep = find(val.first);
+                if (rep != this->end())
                     return (rep);
                 rep = this->_c.insert(position, val);
                 this->_size_map++;
@@ -198,7 +205,7 @@ namespace ft
                 for (size_t i = 0; i < this->_size_map; i++)
                     if (this->_c[i].first == k)
                     {
-                        this->_c.erase(ft::vector<value_type>::iterator(this->_c[i]));
+                        this->_c.erase(this->_c.begin() + i);
                         break ;
                     }
                 return (--this->_size_map);
@@ -207,7 +214,7 @@ namespace ft
             void erase (iterator first, iterator last)
             {
                 while (first != last)
-                    erase(first->first++);
+                    erase(first++->first);
             };
 
             //Exchanges the content of the container by the content of x, which is another map of the same type. Sizes may differ
@@ -237,11 +244,28 @@ namespace ft
                 return (value_compare());
             };
 
-        /*          Operations                      */
+        /*          Operations               */       
             
             //Searches the container for an element with a key equivalent to k and returns an iterator to it if found, otherwise it returns an iterator to map::end.
-            iterator find (const key_type& k);
-            const_iterator find (const key_type& k) const;
+            iterator find (const key_type& k)
+            {
+                for (iterator it = this->begin(); it != this->end(); it++)
+                {
+                    if (it->first == k)
+                        return (it);
+                }
+                return (this->end());
+            };
+
+            const_iterator find (const key_type& k) const
+            {
+                for (const_iterator it = this->begin(); it != this->end(); it++)
+                {
+                    if (it->first == k)
+                        return (it);
+                }
+                return (this->end());
+            };
 
             //Count elements with a specific key
             //Searches the container for elements with a key equivalent to k and returns the number of matches.
@@ -257,8 +281,9 @@ namespace ft
 
             //Get range of equal elements
             //Returns the bounds of a range that includes all the elements in the container which have a key equivalent to k.
-            pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
-            pair<iterator,iterator>             equal_range (const key_type& k);
+            std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const;
+            std::pair<iterator,iterator>             equal_range (const key_type& k);
+        
     };
 
 }

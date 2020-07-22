@@ -39,9 +39,9 @@ public:
     typedef size_t                          size_type;
 
 private:
-    pointer __c;
-    size_type __size;
-    size_type __capacity;
+    pointer     _c;
+    size_type   _size;
+    size_type   _capacity;
 
     size_type  distance(iterator it1, iterator it2)
     {
@@ -58,14 +58,14 @@ private:
     /*                  Member functions                */
 public:
     //empty container constructor (default constructor)
-    explicit vector(const allocator_type &alloc = allocator_type()) : __c(nullptr), __size(0), __capacity(0)
+    explicit vector(const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
     };
 
     /*      Constructs a container with n elements. Each element is a copy of val.      */
     explicit vector(size_type n, const value_type &val = value_type(),
-                    const allocator_type &alloc = allocator_type()) : __c(nullptr), __size(0), __capacity(0)
+                    const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
         this->assign(n, val);
@@ -74,7 +74,7 @@ public:
     /*              Range constructor        */
     template <class InputIterator>
     vector(InputIterator first, InputIterator last,
-           const allocator_type &alloc = allocator_type()): __c(nullptr), __size(0), __capacity(0)
+           const allocator_type &alloc = allocator_type()): _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
         this->assign(first, last);
@@ -83,29 +83,29 @@ public:
     /*          copy constructor        */
     vector(const vector &x)
     {
-        this->__size = x.size();
-        this->__capacity = x.capacity();
-        if (this->__size > 0)
-            this->__c = new value_type[this->__size]();
-        for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
+        this->_size = x.size();
+        this->_capacity = x.capacity();
+        if (this->_size > 0)
+            this->_c = new value_type[this->_size]();
+        for (size_type i = 0; i < this->_size; i++) this->_c[i] = x[i];
     };
 
     /*          Destructor          */
     virtual ~vector()
     {
-        if (this->__c != nullptr)
-            delete[] this->__c;
-        this->__capacity = this->__size = 0;
+        if (this->_c != nullptr)
+            delete[] this->_c;
+        this->_capacity = this->_size = 0;
     };
 
     /*      Copies all the elements from x into the container       */
     vector &operator=(const vector &x)
     {
         this->clear();
-        this->__size = x.size();
-        if (this->__capacity < x.capacity())
+        this->_size = x.size();
+        if (this->_capacity < x.capacity())
             this->reserve(x.capacity());
-        for (size_type i = 0; i < this->__size; i++) this->__c[i] = x[i];
+        for (size_type i = 0; i < this->_size; i++) this->_c[i] = x[i];
         return (*this);
     };
 
@@ -113,22 +113,22 @@ public:
 
     iterator begin()
     {
-        return (iterator(this->__c));
+        return (iterator(this->_c));
     };
 
     const_iterator begin() const
     {
-        return (const_iterator(this->__c));
+        return (const_iterator(this->_c));
     };
 
     iterator end()
     {
-        return (iterator(&(this->__c[this->__size])));
+        return (iterator(&(this->_c[this->_size])));
     };
 
     const_iterator end() const
     {
-        return (const_iterator(&(this->__c[this->__size])));
+        return (const_iterator(&(this->_c[this->_size])));
     };
 
     reverse_iterator rbegin()
@@ -156,7 +156,7 @@ public:
     //Return container size
     size_type size() const
     {
-        return (this->__size);
+        return (this->_size);
     };
 
     //Return maximum size
@@ -168,38 +168,38 @@ public:
     //Resizes the container so that it contains n elements
     void resize(size_type n, value_type val = value_type())
     {
-        if (this->__size < n)
-            this->insert(this->end(), n - this->__size, val);
-        else if (n >= 0 && this->__size > n)
+        if (this->_size < n)
+            this->insert(this->end(), n - this->_size, val);
+        else if (n >= 0 && this->_size > n)
             this->erase(this->begin() + n, this->end());
     };
 
     //Returns the size of the storage space currently allocated for the vector, expressed in terms of elements
     size_type capacity() const
     {
-        return (this->__capacity);
+        return (this->_capacity);
     };
 
     //Returns whether the vector is empty
     bool empty() const
     {
-        return (this->__size == 0);
+        return (this->_size == 0);
     };
 
     //Requests that the vector capacity be at least enough to contain n elements
     void reserve(size_type n)
     {
-        if (n > this->__capacity)
+        if (n > this->_capacity)
         {
-            size_type new_size = (n > this->__capacity * 2) ? n : this->__capacity * 2;
+            size_type new_size = (n > this->_capacity * 2) ? n : this->_capacity * 2;
             pointer tmp = new value_type[new_size]();
-            if (this->__c)
+            if (this->_c)
             {
-                for (size_type i = 0; i < this->__size; i++) tmp[i] = this->__c[i];
-                delete[] this->__c;
+                for (size_type i = 0; i < this->_size; i++) tmp[i] = this->_c[i];
+                delete[] this->_c;
             }
-            this->__c = tmp;
-            this->__capacity = new_size;
+            this->_c = tmp;
+            this->_capacity = new_size;
         }
     };
 
@@ -208,35 +208,35 @@ public:
     //Returns a reference to the element at position n in the vector container
     reference operator[](size_type n)
     {
-        if (n < 0 || n >= this->__size)
+        if (n < 0 || n >= this->_size)
             throw std::out_of_range("Vector Exception: Out of range");
         else
-            return (this->__c[n]);
+            return (this->_c[n]);
     };
 
     const_reference operator[](size_type n) const
     {
-        if (n < 0 || n >= this->__size)
+        if (n < 0 || n >= this->_size)
             throw std::out_of_range("Vector Exception: Out of range");
         else
-            return (this->__c[n]);
+            return (this->_c[n]);
     };
 
     //Returns a reference to the element at position n in the vector
     reference at(size_type n)
     {
-        if (n < 0 || n >= this->__size)
+        if (n < 0 || n >= this->_size)
             throw std::out_of_range("Vector Exception: Out of range");
         else
-            return (this->__c[n]);
+            return (this->_c[n]);
     };
 
     const_reference at(size_type n) const
     {
-        if (n < 0 || n >= this->__size)
+        if (n < 0 || n >= this->_size)
             throw std::out_of_range("Vector Exception: Out of range");
         else
-            return (this->__c[n]);
+            return (this->_c[n]);
     };
 
     //Returns a reference to the first element in the vector
@@ -298,33 +298,33 @@ public:
 
     void insert(iterator position, size_type n, const value_type &val)
     {
-        size_type new_size = this->__size + n;
+        size_type new_size = this->_size + n;
         iterator it = this->begin();
 
-        if (new_size > this->__capacity)
+        if (new_size > this->_capacity)
             this->reserve(new_size);
         size_type posIt = this->distance(it, position);
-        for (size_type i = this->__size; i > posIt; i--)
-            this->__c[i + n - 1] = this->__c[i - 1];
+        for (size_type i = this->_size; i > posIt; i--)
+            this->_c[i + n - 1] = this->_c[i - 1];
         for (size_type i = 0; i < n; i++)
-            this->__c[i + posIt] = val;
-        this->__size += n;
+            this->_c[i + posIt] = val;
+        this->_size += n;
     };
 
     void insert(iterator position, iterator first, iterator last)
     {
         size_type n = this->distance(first, last);
-        size_type new_size = this->__size + n;
+        size_type new_size = this->_size + n;
         iterator it = this->begin();
 
-        if (new_size > this->__capacity)
+        if (new_size > this->_capacity)
             this->reserve(new_size);
         size_type posIt = this->distance(it, position);
-        for (size_type i = this->__size; i > posIt; i--)
-            this->__c[i + n - 1] = this->__c[i - 1];
+        for (size_type i = this->_size; i > posIt; i--)
+            this->_c[i + n - 1] = this->_c[i - 1];
         for (size_type i = 0; i < n; i++)
-            this->__c[i + posIt] = *first++;
-        this->__size += n;
+            this->_c[i + posIt] = *first++;
+        this->_size += n;
     };
 
     //Removes from the vector either a single element (position) or a range of elements ([first,last))
@@ -341,16 +341,16 @@ public:
         for (iterator it = first; it != last; it++) *it = value_type();
         if (last < this->end())
             for (iterator it = first; last != this->end(); ++it) *it = *last++;
-        this->__size -= n;
-        return (iterator(&this->__c[posIt]));
+        this->_size -= n;
+        return (iterator(&this->_c[posIt]));
     };
 
     //Exchanges the content of the container by the content of x, which is another vector object of the same type. Sizes may differ
     void swap(vector &x)
     {
-        ft::swap(this->__size, x.__size);
-        ft::swap(this->__capacity, x.__capacity);
-        ft::swap(this->__c, x.__c);
+        ft::swap(this->_size, x._size);
+        ft::swap(this->_capacity, x._capacity);
+        ft::swap(this->_c, x._c);
     };
 
     //Removes all elements from the vector (which are destroyed), leaving the container with a size of 0
