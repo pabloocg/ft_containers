@@ -1,31 +1,29 @@
-// map::insert (C++98)
 #include <iostream>
-//#include <map>
-#include "../map.hpp"
+#include <map>
 # include "utils.cpp"
 
-void        map_test(void)
+void        map_sys(void)
 {
 	{
-		ft::map<char,int> mymap;
+		std::map<char,int> mymap;
 
 		mymap['b'] = 100;
 		mymap['a'] = 200;
 		mymap['c'] = 300;
 
 		// show content:
-		for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
 			std::cout << it->first << " => " << it->second << '\n';
 	}
 	{
-		ft::map<char,int>       mymap;
-		ft::map<char,int>::iterator it;
+		std::map<char,int>       mymap;
+		std::map<char,int>::iterator it;
 
 		// first insert function version (single parameter):
 		mymap.insert ( std::pair<char,int>('a',100) );
 		mymap.insert ( std::pair<char,int>('z',200) );
 
-		std::pair<ft::map<char,int>::iterator, bool> ret;
+		std::pair<std::map<char,int>::iterator, bool> ret;
 		ret = mymap.insert ( std::pair<char,int>('z',500) );
 		if (ret.second==false)
 		{
@@ -38,7 +36,7 @@ void        map_test(void)
 	}
 	{
 		std::cout << "Erase and empty function" << std::endl;
-		ft::map<char,int> mymap;
+		std::map<char,int> mymap;
 
 		mymap['a']=10;
 		mymap['b']=20;
@@ -52,7 +50,7 @@ void        map_test(void)
 	}
 	{
 		std::cout << "Size function" << std::endl;
-		ft::map<char,int> mymap;
+		std::map<char,int> mymap;
 		mymap['a']=101;
 		mymap['b']=202;
 		mymap['c']=302;
@@ -64,14 +62,14 @@ void        map_test(void)
 		std::cout << "mymap.size() is " << mymap.size() << '\n';
 	}
 	{
-		ft::map<char,int> mymap;
+		std::map<char,int> mymap;
 		char c;
 
-		mymap ['a']= 101;
-		mymap ['c']= 202;
-		mymap ['f']= 303;
+		mymap ['a']=101;
+		mymap ['c']=202;
+		mymap ['f']=303;
 
-		for (c = 'a'; c < 'h'; c++)
+		for (c='a'; c<'h'; c++)
 		{
 			std::cout << c;
 			if (mymap.count(c)>0)
@@ -81,8 +79,8 @@ void        map_test(void)
 		}
 	}
 	{
-		ft::map<char,int> mymap;
-		ft::map<char,int>::iterator itlow,itup;
+		std::map<char,int> mymap;
+		std::map<char,int>::iterator itlow,itup;
 
 		mymap['a']=20;
 		mymap['b']=40;
@@ -92,20 +90,21 @@ void        map_test(void)
 
 		itlow=mymap.lower_bound ('b');  // itlow points to b
 		itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+
 		mymap.erase(itlow,itup);        // erases [itlow,itup)
 
 		// print content:
-		for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
 			std::cout << it->first << " => " << it->second << '\n';
 	}
 	{
-		ft::map<char,int> mymap;
+		std::map<char,int> mymap;
 
 		mymap['a']=10;
 		mymap['b']=20;
 		mymap['c']=30;
 
-		std::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret;
+		std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
 		ret = mymap.equal_range('b');
 
 		std::cout << "lower bound points to: ";

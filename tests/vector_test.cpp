@@ -6,9 +6,9 @@
 # include "utils.cpp"
 
 
-int  main()
+void	vector_test(void)
 {
-    /*{
+    {
         std::cout << "Assign Function: " << std::endl;
         ft::vector<int> first;
         ft::vector<int> second;
@@ -296,7 +296,7 @@ int  main()
         for (size_t i=0;i<myvector.size();i++)
             std::cout << ' ' << myvector[i];
         std::cout << '\n';
-    }*/
+    }
     {
         ft::vector<int> foo (3,100);   // three ints with a value of 100
         ft::vector<int> bar (5,200);   // five ints with a value of 200
@@ -329,8 +329,6 @@ int  main()
             std::cout << ' ' << *it;
         std::cout << '\n';
     }
-    //system("leaks a.out");
-    return 0;
 }
 
 #endif

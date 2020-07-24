@@ -18,34 +18,34 @@
 namespace ft
 {
 
-template <typename T, class Alloc = std::allocator<T> >
+template <typename T, class Alloc = std::allocator<T>>
 class vector
 {
 
     /*                      Member types                           */
 
 public:
-    typedef T                               value_type;
-    typedef Alloc                           allocator_type;
-    typedef value_type &                    reference;
-    typedef value_type const &              const_reference;
-    typedef value_type *                    pointer;
-    typedef value_type const *              const_pointer;
-    typedef Iterator<value_type>            iterator;
-    typedef Iterator<value_type const>      const_iterator;
-    typedef ReverseIterator<iterator>       reverse_iterator;
+    typedef T value_type;
+    typedef Alloc allocator_type;
+    typedef value_type &reference;
+    typedef value_type const &const_reference;
+    typedef value_type *pointer;
+    typedef value_type const *const_pointer;
+    typedef Iterator<value_type> iterator;
+    typedef Iterator<value_type const> const_iterator;
+    typedef ReverseIterator<iterator> reverse_iterator;
     typedef ReverseIterator<const_iterator> const_reverse_iterator;
-    typedef std::ptrdiff_t                  difference_type;
-    typedef size_t                          size_type;
+    typedef std::ptrdiff_t difference_type;
+    typedef size_t size_type;
 
 private:
-    pointer     _c;
-    size_type   _size;
-    size_type   _capacity;
+    pointer _c;
+    size_type _size;
+    size_type _capacity;
 
-    size_type  distance(iterator it1, iterator it2)
+    size_type distance(iterator it1, iterator it2)
     {
-        size_type  dis = 0;
+        size_type dis = 0;
 
         while (it1 != it2)
         {
@@ -74,7 +74,7 @@ public:
     /*              Range constructor        */
     template <class InputIterator>
     vector(InputIterator first, InputIterator last,
-           const allocator_type &alloc = allocator_type()): _c(nullptr), _size(0), _capacity(0)
+           const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
         this->assign(first, last);
@@ -87,7 +87,8 @@ public:
         this->_capacity = x.capacity();
         if (this->_size > 0)
             this->_c = new value_type[this->_size]();
-        for (size_type i = 0; i < this->_size; i++) this->_c[i] = x[i];
+        for (size_type i = 0; i < this->_size; i++)
+            this->_c[i] = x[i];
     };
 
     /*          Destructor          */
@@ -105,7 +106,8 @@ public:
         this->_size = x.size();
         if (this->_capacity < x.capacity())
             this->reserve(x.capacity());
-        for (size_type i = 0; i < this->_size; i++) this->_c[i] = x[i];
+        for (size_type i = 0; i < this->_size; i++)
+            this->_c[i] = x[i];
         return (*this);
     };
 
@@ -195,7 +197,8 @@ public:
             pointer tmp = new value_type[new_size]();
             if (this->_c)
             {
-                for (size_type i = 0; i < this->_size; i++) tmp[i] = this->_c[i];
+                for (size_type i = 0; i < this->_size; i++)
+                    tmp[i] = this->_c[i];
                 delete[] this->_c;
             }
             this->_c = tmp;
@@ -338,9 +341,11 @@ public:
         size_type posIt = this->distance(this->begin(), first);
         size_type n = this->distance(first, last);
 
-        for (iterator it = first; it != last; it++) *it = value_type();
+        for (iterator it = first; it != last; it++)
+            *it = value_type();
         if (last < this->end())
-            for (iterator it = first; last != this->end(); ++it) *it = *last++;
+            for (iterator it = first; last != this->end(); ++it)
+                *it = *last++;
         this->_size -= n;
         return (iterator(&this->_c[posIt]));
     };

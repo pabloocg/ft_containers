@@ -23,7 +23,7 @@ $(NAME):	${OBJS}
 			${GCC} ${FLAGS} ${OBJS} -o ${NAME}
 
 test all:	$(NAME)
-			list stack queue vector
+			list stack queue vector map
 
 list:		$(NAME)
 			./${NAME} list_test > FT_LIST.TXT
@@ -40,6 +40,10 @@ queue:		$(NAME)
 vector:		$(NAME)
 			./${NAME} vector_test > FT_VECTOR.TXT
 			./${NAME} vector_sys > STD_VECTOR.TXT
+
+map:		$(NAME)
+			./${NAME} map_test > FT_MAP.TXT
+			./${NAME} map_sys > STD_MAP.TXT
 
 txt:
 			rm *.TXT
