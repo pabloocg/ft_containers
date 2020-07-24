@@ -9,8 +9,8 @@
 
 /*
     Hacer funcion insert que use el Compare y ordene los valores.
-
-
+    All operators
+    More tests
 */
 
 namespace ft
