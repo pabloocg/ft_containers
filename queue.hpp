@@ -4,7 +4,7 @@
 
 namespace ft
 {
-template <typename T, class Container = list<T>>
+template <typename T, class Container = list<T> >
 class queue
 {
 

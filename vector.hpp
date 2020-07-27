@@ -8,17 +8,10 @@
 #include <iostream>
 #include <stdexcept>
 
-/*
-    - All operators
-    - Test pasados
-        - Mirar reverse iterator
-        - Comprobar que el reverse de contenedor list no ha cambiado
-*/
-
 namespace ft
 {
 
-template <typename T, class Alloc = std::allocator<T>>
+template <typename T, class Alloc = std::allocator<T> >
 class vector
 {
 
@@ -365,23 +358,43 @@ public:
     };
 };
 
-template <typename T, class Alloc>
-bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+    /*          Non-member function overloads               */
 
 template <typename T, class Alloc>
-bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+};
 
 template <typename T, class Alloc>
-bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (!(lhs == rhs));
+};
 
 template <typename T, class Alloc>
-bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+};
 
 template <typename T, class Alloc>
-bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (!(rhs < lhs));
+};
 
 template <typename T, class Alloc>
-bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs);
+bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (rhs < lhs);
+};
+
+template <typename T, class Alloc>
+bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+{
+    return (!(lhs < rhs));
+};
 
 template <typename T, class Alloc>
 void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)

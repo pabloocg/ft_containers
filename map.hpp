@@ -19,7 +19,7 @@ template <
     typename Key,
     typename T,
     class Compare = ft::less<Key>,
-    class Alloc = std::allocator<std::pair<Key, T>>>
+    class Alloc = std::allocator<std::pair<Key, T> > >
 class map
 {
     /*                      Member types                           */
@@ -339,43 +339,59 @@ public:
         return (std::make_pair(lower_bound(k), upper_bound(k)));
     };
 };
-} // namespace ft
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
                 const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator!=(const ft::map<Key, T, Compare, Alloc> &lhs,
                 const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator<(const ft::map<Key, T, Compare, Alloc> &lhs,
                const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator<=(const ft::map<Key, T, Compare, Alloc> &lhs,
                 const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator>(const ft::map<Key, T, Compare, Alloc> &lhs,
                const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 bool operator>=(const ft::map<Key, T, Compare, Alloc> &lhs,
                 const ft::map<Key, T, Compare, Alloc> &rhs);
 
-template <typename Key, typename T, class Compare = ft::less<Key>,
-          class Alloc = std::allocator<std::pair<Key, T>>>
+template <typename Key,
+            typename T,
+            class Compare,
+            class Alloc>
 void swap(ft::map<Key, T, Compare, Alloc> &x, ft::map<Key, T, Compare, Alloc> &y)
 {
     x.swap(y);
 };
+
+} // namespace ft
+
 
 #endif

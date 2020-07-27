@@ -329,6 +329,132 @@ void	vector_test(void)
             std::cout << ' ' << *it;
         std::cout << '\n';
     }
+    {
+        ft::vector<int> foo (3,100);   // three ints with a value of 100
+        ft::vector<int> bar (2,200);   // two ints with a value of 200
+
+        if (foo==bar) std::cout << "foo and bar are equal\n";
+        if (foo!=bar) std::cout << "foo and bar are not equal\n";
+        if (foo< bar) std::cout << "foo is less than bar\n";
+        if (foo> bar) std::cout << "foo is greater than bar\n";
+        if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+        if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+    }
+	{
+        std::cout << "\n---operators\n\n";
+		ft::vector<int> vec;
+		vec.push_back(5);
+		vec.push_back(42);
+			assert(vec.size() == 2);
+
+		ft::vector<int> vec2;
+		vec2.push_back(5);
+		vec2.push_back(42);
+			assert(vec2.size() == 2);
+
+		ft::vector<int> vec3;
+		vec3.push_back(5);
+		vec3.push_back(42);
+		vec3.push_back(43);
+			assert(vec3.size() == 3);
+
+		ft::vector<int> vec4;
+		vec4.push_back(99);
+		vec4.push_back(42);
+		vec4.push_back(43);
+			assert(vec4.size() == 3);
+
+		std::cout << "same vector:" << '\n'
+			<< "comparison == " << (vec == vec2) << '\n'
+			<< "comparison != " << (vec != vec2) << '\n'
+			<< "comparison <  " << (vec < vec2) << '\n'
+			<< "comparison >  " << (vec > vec2) << '\n'
+			<< "comparison <= " << (vec <= vec2) << '\n'
+			<< "comparison >= " << (vec >= vec2) << '\n';
+		assert(vec == vec2);
+		assert(!(vec != vec2));
+		assert(!(vec < vec2));
+		assert(!(vec > vec2));
+		assert(vec <= vec2);
+		assert(vec >= vec2);
+
+		std::cout << "lesser vector:" << '\n'
+			<< "comparison == " << (vec == vec3) << '\n'
+			<< "comparison != " << (vec != vec3) << '\n'
+			<< "comparison <  " << (vec < vec3) << '\n'
+			<< "comparison >  " << (vec > vec3) << '\n'
+			<< "comparison <= " << (vec <= vec3) << '\n'
+			<< "comparison >= " << (vec >= vec3) << '\n';
+		assert(!(vec == vec3));
+		assert(vec != vec3);
+		assert(vec < vec3);
+		assert(!(vec > vec3));
+		assert(vec <= vec3);
+		assert(!(vec >= vec3));
+
+		std::cout << "upper vector:" << '\n'
+			<< "comparison == " << (vec4 == vec) << '\n'
+			<< "comparison != " << (vec4 != vec) << '\n'
+			<< "comparison <  " << (vec4 < vec) << '\n'
+			<< "comparison >  " << (vec4 > vec) << '\n'
+			<< "comparison <= " << (vec4 <= vec) << '\n'
+			<< "comparison >= " << (vec4 >= vec) << '\n';
+		assert(!(vec4 == vec));
+		assert(vec4 != vec);
+		assert(!(vec4 < vec));
+		assert(vec4 > vec);
+		assert(!(vec4 <= vec));
+		assert(vec4 >= vec);
+	}
+	{
+	std::cout << "\n---swap\n\n";
+		ft::vector<int> vec;
+		vec.push_back(5);
+		vec.push_back(42);
+		vec.push_back(43);
+			assert(vec.size() == 3);
+
+		ft::vector<int> vec2;
+		vec2.push_back(12);
+		vec2.push_back(30);
+		vec2.push_back(60);
+			assert(vec2.size() == 3);
+
+		display_container("vec [5, 42, 43]:", vec);
+            assert(vec[0] == 5);
+            assert(vec[1] == 42);
+            assert(vec[2] == 43);
+            assert(vec.size() == 3);
+		display_container("vec2 [12, 30, 60]:", vec2);
+            assert(vec2[0] == 12);
+            assert(vec2[1] == 30);
+            assert(vec2[2] == 60);
+            assert(vec2.size() == 3);
+		vec.swap(vec2);
+		std::cout << "---swapped\n";
+		display_container("vec [12, 30, 60]:", vec);
+            assert(vec[0] == 12);
+            assert(vec[1] == 30);
+            assert(vec[2] == 60);
+            assert(vec.size() == 3);
+		display_container("vec2 [5, 42, 43]:", vec2);
+            assert(vec2[0] == 5);
+            assert(vec2[1] == 42);
+            assert(vec2[2] == 43);
+            assert(vec2.size() == 3);
+		vec.swap(vec2);
+		std::cout << "---swapped\n";
+		display_container("vec [5, 42, 43]:", vec);
+            assert(vec[0] == 5);
+            assert(vec[1] == 42);
+            assert(vec[2] == 43);
+            assert(vec.size() == 3);
+		display_container("vec2 [12, 30, 60]:", vec2);
+            assert(vec2[0] == 12);
+            assert(vec2[1] == 30);
+            assert(vec2[2] == 60);
+            assert(vec2.size() == 3);
+	}
 }
 
 #endif
