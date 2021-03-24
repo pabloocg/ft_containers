@@ -1,12 +1,12 @@
 #ifndef VECTOR_HPP
-#define VECTOR_HPP
-#include "tools/algorithm.hpp"
-#include "tools/Iterator.hpp"
-#include "tools/reverse_iterator.hpp"
-#include <limits>
-#include <memory>
-#include <iostream>
-#include <stdexcept>
+# define VECTOR_HPP
+# include "tools/algorithm.hpp"
+# include "tools/Iterator.hpp"
+# include "tools/reverse_iterator.hpp"
+# include <limits>
+# include <memory>
+# include <iostream>
+# include <stdexcept>
 
 namespace ft
 {
@@ -18,23 +18,23 @@ class vector
     /*                      Member types                           */
 
 public:
-    typedef T value_type;
-    typedef Alloc allocator_type;
-    typedef value_type &reference;
-    typedef value_type const &const_reference;
-    typedef value_type *pointer;
-    typedef value_type const *const_pointer;
-    typedef Iterator<value_type> iterator;
-    typedef Iterator<value_type const> const_iterator;
-    typedef ReverseIterator<iterator> reverse_iterator;
+    typedef T                               value_type;
+    typedef Alloc                           allocator_type;
+    typedef value_type                      &reference;
+    typedef value_type const                &const_reference;
+    typedef value_type                      *pointer;
+    typedef value_type const                *const_pointer;
+    typedef Iterator<value_type>            iterator;
+    typedef Iterator<value_type const>      const_iterator;
+    typedef ReverseIterator<iterator>       reverse_iterator;
     typedef ReverseIterator<const_iterator> const_reverse_iterator;
-    typedef std::ptrdiff_t difference_type;
-    typedef size_t size_type;
+    typedef std::ptrdiff_t                  difference_type;
+    typedef size_t                          size_type;
 
 private:
-    pointer _c;
-    size_type _size;
-    size_type _capacity;
+    pointer     _c;
+    size_type   _size;
+    size_type   _capacity;
 
     size_type distance(iterator it1, iterator it2)
     {
@@ -43,7 +43,7 @@ private:
         while (it1 != it2)
         {
             ++it1;
-            dis++;
+            ++dis;
         }
         return (dis);
     }
@@ -51,13 +51,13 @@ private:
     /*                  Member functions                */
 public:
     //empty container constructor (default constructor)
-    explicit vector(const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
+    vector(const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
     };
 
     /*      Constructs a container with n elements. Each element is a copy of val.      */
-    explicit vector(size_type n, const value_type &val = value_type(),
+    vector(size_type n, const value_type &val = value_type(),
                     const allocator_type &alloc = allocator_type()) : _c(nullptr), _size(0), _capacity(0)
     {
         (void)alloc;
@@ -300,9 +300,9 @@ public:
         if (new_size > this->_capacity)
             this->reserve(new_size);
         size_type posIt = this->distance(it, position);
-        for (size_type i = this->_size; i > posIt; i--)
+        for (size_type i = this->_size; i > posIt; --i)
             this->_c[i + n - 1] = this->_c[i - 1];
-        for (size_type i = 0; i < n; i++)
+        for (size_type i = 0; i < n; ++i)
             this->_c[i + posIt] = val;
         this->_size += n;
     };
@@ -358,7 +358,7 @@ public:
     };
 };
 
-    /*          Non-member function overloads               */
+/*          Non-member function overloads               */
 
 template <typename T, class Alloc>
 bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)

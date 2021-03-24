@@ -9,14 +9,22 @@ namespace ft
         public:
 
             using typename It::value_type;
+            using typename It::pointer;
+            using typename It::const_pointer;
             using typename It::reference;
             using typename It::const_reference;
-
-
 
             ReverseIterator(): It() {};
             ReverseIterator(It const &other): It(other) {};
             ReverseIterator(ReverseIterator const &other): It(other) {};
+
+            virtual ~ReverseIterator() {};
+
+            ReverseIterator& operator=(const ReverseIterator &other)
+            {
+                this->_p = other._p;
+                return (*this);
+            };
 
 
             reference operator* ()
@@ -59,11 +67,20 @@ namespace ft
                 return (this->It::operator++());
             }
 
-            /*ReverseIterator& operator= (const ReverseIterator & other)
+            pointer operator-> ()
             {
-                this->pointer = other.get_pointer();
-                return (*this);
-            };*/
+                It tmp(*this);
+
+		        return (&*--tmp);
+            };
+
+            const_pointer operator-> () const
+            {
+                It tmp(*this);
+
+		        return (&*--tmp);
+            };
+
     };    
 }
 

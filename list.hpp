@@ -1,52 +1,55 @@
 #ifndef LIST_HPP
-#define LIST_HPP
+# define LIST_HPP
 
-#include "tools/Node.hpp"
-#include "tools/algorithm.hpp"
-#include "tools/IteratorList.hpp"
-#include "tools/reverse_iterator.hpp"
-#include <limits>
+# include "tools/Node.hpp"
+# include "tools/algorithm.hpp"
+# include "tools/IteratorList.hpp"
+# include "tools/reverse_iterator.hpp"
+# include <limits>
 
 namespace ft
 {
 
-template <typename T>
+template <class T, class Alloc = std::allocator<T> >
 class list
 {
 
     /*                      Member types                           */
 
 public:
-    typedef T value_type;
-    typedef Node<value_type> node_type;
-    typedef node_type *node_pointer;
-    typedef value_type &reference;
-    typedef value_type const &const_reference;
-    typedef value_type *pointer;
-    typedef value_type const *const_pointer;
-    typedef std::ptrdiff_t difference_type;
-    typedef size_t size_type;
-    typedef IteratorList<value_type, node_type> iterator;
+    typedef T                                               value_type;
+protected:
+    typedef Node<value_type>                                node_type;
+    typedef node_type                                       *node_pointer;
+public:
+    typedef Alloc                                           allocator_type;
+    typedef value_type                                      &reference;
+    typedef value_type const                                &const_reference;
+    typedef value_type                                      *pointer;
+    typedef value_type const                                *const_pointer;
+    typedef IteratorList<value_type, node_type>             iterator;
     typedef IteratorList<value_type const, node_type const> const_iterator;
-    typedef ReverseIterator<iterator> reverse_iterator;
-    typedef ReverseIterator<const_iterator> const_reverse_iterator;
+    typedef ReverseIterator<iterator>                       reverse_iterator;
+    typedef ReverseIterator<const_iterator>                 const_reverse_iterator;
+    typedef std::ptrdiff_t                                  difference_type;
+    typedef size_t                                          size_type;
 
 private:
-    node_pointer n_begin;
-    node_pointer n_end;
-    size_type list_size;
+    node_pointer    _nbegin;
+    node_pointer    _nend;
+    size_type       _size;
 
     void init_list()
     {
-        this->n_end = new node_type();
-        this->n_begin = this->n_end;
+        this->_nend = new node_type();
+        this->_nbegin = this->_nend;
     }
 
     void reset()
     {
-        this->n_end->connect_next(nullptr);
-        this->n_end->connect_previous(nullptr);
-        this->n_begin = this->n_end;
+        this->_nend->connect_next(nullptr);
+        this->_nend->connect_previous(nullptr);
+        this->_nbegin = this->_nend;
     }
 
     /*                      Member Functions                       */
@@ -55,28 +58,31 @@ public:
     /*       Constructor Types      */
 
     /*Default Constructor*/
-    explicit list(void) : n_begin(nullptr), n_end(nullptr), list_size(0)
+    list(void) : _nbegin(nullptr), _nend(nullptr), _size(0)
     {
         this->init_list();
     };
 
     /*Constructor with value intialization*/
-    explicit list(size_type n, const value_type &val = value_type()) : n_begin(nullptr), n_end(nullptr), list_size(0)
+    list(size_type n, const_reference val = value_type(),
+            const allocator_type& alloc = allocator_type()) : _nbegin(nullptr), _nend(nullptr), _size(0)
     {
+        (void)alloc;
         this->init_list();
         this->assign(n, val);
     };
 
     /*Constructor with range iterator*/
-    template <class InputIterator>
-    list(InputIterator first, InputIterator last)
+    template <typename InputIterator>
+    list(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
     {
+        (void)alloc;
         this->init_list();
         this->assign(first, last);
     };
 
     /*Constructor copy from other list*/
-    list(const list &x) : n_begin(nullptr), n_end(nullptr), list_size(0)
+    list(const list &x) : _nbegin(nullptr), _nend(nullptr), _size(0)
     {
         this->init_list();
         this->assign(x.begin(), x.end());
@@ -87,8 +93,8 @@ public:
     virtual ~list(void)
     {
         this->clear();
-        if (this->n_end)
-            delete this->n_end;
+        if (this->_nend)
+            delete this->_nend;
     };
 
     /*          Operators           */
@@ -104,25 +110,25 @@ public:
     /*Return iterator to beginning*/
     iterator begin()
     {
-        return (iterator(this->n_begin));
+        return (iterator(this->_nbegin));
     };
 
     /*Return const_iterator to beginning*/
     const_iterator begin() const
     {
-        return (const_iterator(this->n_begin));
+        return (const_iterator(this->_nbegin));
     };
 
     /*Return iterator to end*/
     iterator end()
     {
-        return (iterator(this->n_end));
+        return (iterator(this->_nend));
     };
 
     /*Return const_iterator to end*/
     const_iterator end() const
     {
-        return (const_iterator(this->n_end));
+        return (const_iterator(this->_nend));
     };
 
     /*Return reverse iterator to reverse beginning*/
@@ -134,7 +140,7 @@ public:
     /*Return const_reverse_iterator to reverse beginning*/
     const_reverse_iterator rbegin() const
     {
-        return (const_reverse_iterator(this->cend()));
+        return (const_reverse_iterator(this->end()));
     };
 
     /*Return reverse iterator to reverse end*/
@@ -146,7 +152,7 @@ public:
     /*Return const_reverse_iterator to reverse end*/
     const_reverse_iterator rend() const
     {
-        return (const_reverse_iterator(this->cbegin()));
+        return (const_reverse_iterator(this->begin()));
     };
 
     /*          Capacity            */
@@ -154,16 +160,16 @@ public:
     /*Test whether container is empty*/
     bool empty() const
     {
-        return (this->list_size == 0);
+        return (this->_size == 0);
     };
 
-    /*Return size*/
+    /*Return _size*/
     size_type size() const
     {
-        return (this->list_size);
+        return (this->_size);
     };
 
-    /*Return maximum size*/
+    /*Return maximum _size*/
     size_type max_size() const
     {
         return (std::numeric_limits<size_type>::max() / (sizeof(node_type) - sizeof(pointer)));
@@ -174,13 +180,13 @@ public:
     /*Access first element*/
     reference front()
     {
-        return (this->n_begin->node_value());
+        return (this->_nbegin->node_value());
     };
 
     /*Access last element*/
     reference back()
     {
-        return (this->n_end->node_previous()->node_value());
+        return (this->_nend->node_previous()->node_value());
     };
 
     /*          Modifiers           */
@@ -190,34 +196,34 @@ public:
     void assign(iterator first, iterator last)
     {
         this->clear();
-        for (; first != last; ++first)
+        for ((void)first; first != last; first++)
             this->push_back(*first);
     };
 
     void assign(const_iterator first, const_iterator last)
     {
         this->clear();
-        for (; first != last; ++first)
+        for ((void)first; first != last; first++)
             this->push_back(*first);
     };
 
-    void assign(size_type n, const value_type &val)
+    void assign(size_type n, const_reference val)
     {
         this->clear();
-        for (size_t i = 0; i < n; i++)
+        for (size_type i = 0; i < n; i++)
             this->push_back(val);
     };
 
     /*Insert element at beginning*/
-    void push_front(const value_type &val)
+    void push_front(const_reference val)
     {
         node_type *tmp = new node_type(val);
         if (this->empty())
-            this->n_end->insert_before(tmp);
+            this->_nend->insert_before(tmp);
         else
-            this->n_begin->insert_before(tmp);
-        this->n_begin = tmp;
-        this->list_size++;
+            this->_nbegin->insert_before(tmp);
+        this->_nbegin = tmp;
+        this->_size++;
     };
 
     /*Delete first element*/
@@ -225,22 +231,22 @@ public:
     {
         if (this->empty())
             return;
-        node_type *tmp = this->n_begin->node_next();
-        free(this->n_begin);
-        this->n_begin = tmp;
-        this->list_size--;
-        if (this->list_size == 0)
+        node_type *tmp = this->_nbegin->node_next();
+        free(this->_nbegin);
+        this->_nbegin = tmp;
+        this->_size--;
+        if (this->_size == 0)
             this->reset();
     };
 
     /*Add element at the end*/
-    void push_back(const value_type &val)
+    void push_back(const_reference val)
     {
         node_type *tmp = new node_type(val);
-        this->n_end->insert_before(tmp);
+        this->_nend->insert_before(tmp);
         if (this->empty())
-            this->n_begin = tmp;
-        this->list_size++;
+            this->_nbegin = tmp;
+        this->_size++;
     };
 
     /*Delete last element*/
@@ -248,25 +254,25 @@ public:
     {
         if (this->empty())
             return;
-        else if (this->size() == 1)
+        else if (this->_size == 1)
         {
-            free(this->n_end->node_previous());
-            this->n_begin = n_end;
+            free(this->_nend->node_previous());
+            this->_nbegin = _nend;
         }
         else
         {
-            node_type *tmp = this->n_end->node_previous()->node_previous();
-            tmp->connect_next(this->n_end);
-            free(this->n_end->node_previous());
-            this->n_end->connect_previous(tmp);
+            node_type *tmp = this->_nend->node_previous()->node_previous();
+            tmp->connect_next(this->_nend);
+            free(this->_nend->node_previous());
+            this->_nend->connect_previous(tmp);
         }
-        this->list_size--;
-        if (this->list_size == 0)
+        this->_size--;
+        if (this->_size == 0)
             this->reset();
     };
 
     /*Insert elements*/
-    iterator insert(iterator position, const value_type &val)
+    iterator insert(iterator position, const_reference val)
     {
         if (position.get_pointer()->node_previous() == nullptr)
         {
@@ -276,14 +282,14 @@ public:
         else
         {
             position.get_pointer()->insert_before(new node_type(val));
-            this->list_size++;
+            this->_size++;
             return (iterator(position.get_pointer()->node_previous()));
         }
     };
 
-    void insert(iterator position, size_type n, const value_type &val)
+    void insert(iterator position, size_type n, const_reference val)
     {
-        for (size_t i = 0; i < n; i++)
+        for (size_type i = 0; i < n; i++)
             this->insert(position, val);
     };
 
@@ -296,12 +302,12 @@ public:
     /*Erase elements*/
     iterator erase(iterator position)
     {
-        if (position.get_pointer() == this->n_begin)
+        if (position.get_pointer() == this->_nbegin)
         {
             this->pop_front();
             return (this->begin());
         }
-        else if (position.get_pointer()->node_next() == this->n_end)
+        else if (position.get_pointer()->node_next() == this->_nend)
         {
             this->pop_back();
             return (this->end());
@@ -310,7 +316,7 @@ public:
         position.get_pointer()->node_next()->connect_previous(position.get_pointer()->node_previous());
         node_type *tmp = position.get_pointer()->node_next();
         free(position.get_pointer());
-        this->list_size--;
+        this->_size--;
         return (iterator(tmp));
     };
 
@@ -331,25 +337,25 @@ public:
         *this = tmp;
     };
 
-    /*Change size*/
+    /*Change _size*/
     void resize(size_type n, value_type val = value_type())
     {
-        if (n > this->size())
-            for (size_t i = this->size(); i < n; i++)
+        if (n > this->_size)
+            for (size_type i = this->_size; i < n; i++)
                 this->push_back(val);
-        else if (n < this->size())
-            for (size_t i = this->size(); i > n && n >= 0; i--)
+        else if (n < this->_size)
+            for (size_type i = this->_size; i > n && n >= 0; i--)
                 this->pop_back();
     };
 
     /*Clear list*/
-    //Removes all elements from the list container (which are destroyed), and leaving the container with a size of 0.
+    //Removes all elements from the list container (which are destroyed), and leaving the container with a _size of 0.
     void clear()
     {
         if (this->empty())
             return;
         this->erase(this->begin(), this->end());
-        this->list_size = 0;
+        this->_size = 0;
         this->init_list();
     };
 
@@ -374,21 +380,21 @@ public:
         while (first != last)
         {
             tmp = first++.get_pointer();
-            if (tmp == x.n_begin)
-                x.n_begin = tmp->node_next();
+            if (tmp == x._nbegin)
+                x._nbegin = tmp->node_next();
             tmp->leave_node();
             position.get_pointer()->insert_before(tmp);
-            if (position.get_pointer() == this->n_begin)
-                this->n_begin = tmp;
-            this->list_size++;
-            x.list_size--;
+            if (position.get_pointer() == this->_nbegin)
+                this->_nbegin = tmp;
+            this->_size++;
+            x._size--;
         }
         if (x.empty())
             x.reset();
     };
 
     /*Remove elements with specific value*/
-    void remove(const value_type &val)
+    void remove(const_reference val)
     {
         iterator it = this->begin();
         iterator save;
@@ -484,7 +490,7 @@ public:
     {
         iterator it;
 
-        for (size_type i = 0; i < this->size(); i++)
+        for (size_type i = 0; i < this->_size; i++)
         {
             it = this->begin();
             for (iterator it2 = this->begin() + 1; it2 != this->end(); it2++)
@@ -493,9 +499,9 @@ public:
                 {
                     it.get_pointer()->swap(it2.get_pointer());
                     if (it == this->begin())
-                        this->n_begin = it2.get_pointer();
+                        this->_nbegin = it2.get_pointer();
                     else if (it2 == this->begin())
-                        this->n_begin = it.get_pointer();
+                        this->_nbegin = it.get_pointer();
                     it2 = it;
                 }
                 else
@@ -510,7 +516,7 @@ public:
         iterator it;
         iterator it2;
 
-        for (size_type i = 0; i < this->size(); i++)
+        for (size_type i = 0; i < this->_size; i++)
         {
             it = this->begin();
             it2 = it + 1;
@@ -518,7 +524,7 @@ public:
             {
                 it.get_pointer()->swap(it2.get_pointer());
                 if (it == this->begin())
-                    this->n_begin = it2.get_pointer();
+                    this->_nbegin = it2.get_pointer();
                 it2 = it + 1;
             }
         }

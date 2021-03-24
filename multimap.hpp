@@ -1,5 +1,5 @@
-#ifndef MAP_HPP
-# define MAP_HPP
+#ifndef MULTIMAP_HPP
+# define MULTIMAP_HPP
 # include "tools/BTree.hpp"
 # include "tools/reverse_iterator.hpp"
 # include <limits>
@@ -8,7 +8,7 @@
 namespace ft
 {
 template<typename Key, typename T, typename Compare = ft::less<Key> >
-class mapCompare:
+class multimapCompare:
 	std::binary_function<std::pair<Key, T>, std::pair<Key, T>, bool>
 {
 public:
@@ -16,8 +16,8 @@ public:
 private:
 	Compare __comp;
 public:
-	mapCompare(Compare const &__comp=Compare()): __comp(__comp) {}
-	virtual ~mapCompare() {}
+	multimapCompare(Compare const &__comp=Compare()): __comp(__comp) {}
+	virtual ~multimapCompare() {}
 
 	bool operator()(const value_type& a, const value_type& b) const
     {
@@ -37,8 +37,8 @@ public:
 	};
 };
 
-template <typename Key, typename T, typename Compare = mapCompare<Key, T>, class Alloc = std::allocator<std::pair<Key, T> > >
-class map
+template <typename Key, typename T, typename Compare = multimapCompare<Key, T>, class Alloc = std::allocator<std::pair<Key, T> > >
+class multimap
 {
     /*                      Member types                           */
 
@@ -85,39 +85,39 @@ public:
 
 private:
     tree_type       __btree;
-    size_type       __size_map;
+    size_type       __size_multimap;
     key_compare     __comp;
 
 public:
-    map(const key_compare &__comp = key_compare(),
-        const allocator_type &alloc = allocator_type()) : __btree(), __size_map(0), __comp(__comp)
+    multimap(const key_compare &__comp = key_compare(),
+        const allocator_type &alloc = allocator_type()) : __btree(), __size_multimap(0), __comp(__comp)
     {
         (void)alloc;
     };
 
     template <class InputIterator>
-    map(InputIterator first, InputIterator last,
+    multimap(InputIterator first, InputIterator last,
         const key_compare &__comp = key_compare(),
-        const allocator_type &alloc = allocator_type()) : __btree(), __size_map(0), __comp(__comp)
+        const allocator_type &alloc = allocator_type()) : __btree(), __size_multimap(0), __comp(__comp)
     {
         (void)alloc;
         insert(first, last);
     };
 
     /*          copy constructor        */
-    map(const map &x): __btree(x.__btree), __size_map(x.__size_map)
+    multimap(const multimap &x): __btree(x.__btree), __size_multimap(x.__size_multimap)
     {
     };
 
     /*          Destructor          */
-    virtual ~map()
+    virtual ~multimap()
     {
-        if (this->__size_map > 0)
+        if (this->__size_multimap > 0)
             clear();
     };
 
     /*      Copies all the elements from x into the container       */
-    map &operator=(const map &x)
+    multimap &operator=(const multimap &x)
     {
         clear();
         insert(x.begin(), x.end());
@@ -148,22 +148,22 @@ public:
 
     reverse_iterator rbegin()
     {
-        return (reverse_iterator(this->end()));
+        return (reverse_iterator(this->__btree.end()));
     };
 
     const_reverse_iterator rbegin() const
     {
-        return (const_reverse_iterator(this->end()));
+        return (const_reverse_iterator(this->__btree.end()));
     };
 
     reverse_iterator rend()
     {
-        return (reverse_iterator(this->begin()));
+        return (reverse_iterator(this->__btree.begin()));
     };
 
     const_reverse_iterator rend() const
     {
-        return (const_reverse_iterator(this->begin()));
+        return (const_reverse_iterator(this->__btree.begin()));
     };
 
     /*              Capacity                                */
@@ -171,13 +171,13 @@ public:
     //Returns whether the vector is empty
     bool empty() const
     {
-        return (this->__size_map == 0);
+        return (this->__size_multimap == 0);
     };
 
     //Return size
     size_type size() const
     {
-        return (this->__size_map);
+        return (this->__size_multimap);
     };
 
     //Return maximum size
@@ -187,40 +187,17 @@ public:
                                     std::numeric_limits<difference_type>::max()));
     };
 
-    /*          Element Access                      */
-
-    //If k matches the key of an element in the container, the function returns a reference to its mapped value
-    mapped_type &operator[](const key_type &k)
-    {
-        iterator element = this->find(k);
-        if (element != this->end())
-            return (element->second);
-        return ((*((this->insert(std::make_pair(k, mapped_type()))).first)).second);
-    };
-
     /*          Modifiers                               */
 
     //Extends the container by inserting new elements, effectively increasing the container size by the number of elements inserted
-    typename std::pair<iterator, bool> insert(const_reference val)
+    iterator insert(const_reference val)
     {
-        iterator rep;
-
-        rep = this->find(val.first);
-        if (rep != this->end())
-            return (std::make_pair(rep, false));
-        rep = this->__btree.insert_tree(val);
-        ++this->__size_map;
-        return (std::make_pair(rep, true));
+        return (insert(this->begin(), val));
     };
 
     iterator insert(iterator position, const_reference val)
     {
-        node_pointer node;
-
-        node = this->__btree.find_tree(position.get_pointer(), val);
-        if (node)
-            return (iterator(node));
-        ++this->__size_map;
+        ++this->__size_multimap;
         return (this->__btree.insert_tree(position.get_pointer(), val));
     };
 
@@ -228,21 +205,21 @@ public:
     void insert(InputIterator first, InputIterator last)
     {
         while (first != last)
-            this->insert(*first++);
+            this->insert(this->begin(), *first++);
     };
 
-    //Removes from the map container either a single element or a range of elements ([first,last))
+    //Removes from the multimap container either a single element or a range of elements ([first,last))
     void erase(iterator position)
     {
         this->__btree.erase_tree(position.get_pointer());
-        --this->__size_map;
+        --this->__size_multimap;
     };
 
     size_type erase(const key_type &k)
     {
         size_type erased;
 
-		this->__size_map -= erased = this->__btree.erase_tree(k);
+		this->__size_multimap -= erased = this->__btree.erase_tree(k);
         return (erased);
     };
 
@@ -251,23 +228,23 @@ public:
         while (first != last)
         {
             first = this->__btree.erase_tree(first.get_pointer());
-            --this->__size_map;
+            --this->__size_multimap;
         }
     };
 
-    //Exchanges the content of the container by the content of x, which is another map of the same type. Sizes may differ
-    void swap(map &x)
+    //Exchanges the content of the container by the content of x, which is another multimap of the same type. Sizes may differ
+    void swap(multimap &x)
     {
         this->__btree.swap(x.__btree);
-        ft::swap(this->__size_map, x.__size_map);
+        ft::swap(this->__size_multimap, x.__size_multimap);
     };
 
-    //Removes all elements from the map container (which are destroyed), leaving the container with a size of 0
+    //Removes all elements from the multimap container (which are destroyed), leaving the container with a size of 0
     void clear()
     {
-        if (this->__size_map > 0)
+        if (this->__size_multimap > 0)
             this->__btree.clear_tree();
-        this->__size_map = 0;
+        this->__size_multimap = 0;
     };
 
     /*          Observers                           */
@@ -286,7 +263,7 @@ public:
 
     /*          Operations               */
 
-    //Searches the container for an element with a key equivalent to k and returns an iterator to it if found, otherwise it returns an iterator to map::end.
+    //Searches the container for an element with a key equivalent to k and returns an iterator to it if found, otherwise it returns an iterator to multimap::end.
     iterator find(const key_type &k)
     {
         node_pointer node;
@@ -387,8 +364,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
-                const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator==(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+                const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 };
@@ -397,8 +374,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator!=(const ft::map<Key, T, Compare, Alloc> &lhs,
-                const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator!=(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+                const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (!(lhs == rhs));
 };
@@ -407,8 +384,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator<(const ft::map<Key, T, Compare, Alloc> &lhs,
-               const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator<(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+               const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 };
@@ -417,8 +394,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator<=(const ft::map<Key, T, Compare, Alloc> &lhs,
-                const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator<=(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+                const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (!(rhs < lhs));
 };
@@ -427,8 +404,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator>(const ft::map<Key, T, Compare, Alloc> &lhs,
-               const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator>(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+               const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (rhs < lhs);
 };
@@ -437,8 +414,8 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-bool operator>=(const ft::map<Key, T, Compare, Alloc> &lhs,
-                const ft::map<Key, T, Compare, Alloc> &rhs)
+bool operator>=(const ft::multimap<Key, T, Compare, Alloc> &lhs,
+                const ft::multimap<Key, T, Compare, Alloc> &rhs)
 {
     return (!(lhs < rhs));
 };
@@ -447,7 +424,7 @@ template <typename Key,
           typename T,
           class Compare,
           class Alloc>
-void swap(ft::map<Key, T, Compare, Alloc> &x, ft::map<Key, T, Compare, Alloc> &y)
+void swap(ft::multimap<Key, T, Compare, Alloc> &x, ft::multimap<Key, T, Compare, Alloc> &y)
 {
     x.swap(y);
 };

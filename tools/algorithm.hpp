@@ -6,6 +6,14 @@
 namespace ft
 {
 
+    template <class A, class B, class Ret>
+    struct binary_function
+    {
+        typedef A   first_type;
+        typedef B   second_type;
+        typedef Ret result_type;
+    };
+
     template <typename T>
 	void swap(T &a, T &b)
 	{
@@ -56,7 +64,7 @@ namespace ft
         bool operator()(const T& value1, const T& value2) const
         {
             return (value1 < value2);
-        }
+        };
     };
 
     template<class T>

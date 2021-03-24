@@ -1,6 +1,13 @@
 #ifndef UTILS_CPP
 # define UTILS_CPP
 
+# include <iostream>
+
+void		print_banner(std::string title)
+{
+	std::cout << "<<<<<<<<<<<<<<< " << title << " >>>>>>>>>>>>>>> " << std::endl;
+}
+
 template<typename Container>
 void display_container(std::string const &header, Container const &ctn)
 {
@@ -10,6 +17,23 @@ void display_container(std::string const &header, Container const &ctn)
 	if (it == ite)
 		std::cout << " empty !";
 	std::cout << '\n';
+	while (it != ite)
+	{
+		std::cout << *it;
+		if (++it == ite)
+			std::cout << '\n';
+		else
+			std::cout <<  ", ";
+	}
+}
+
+template<typename Container>
+void display_container(Container const &ctn)
+{
+	typename Container::const_iterator it = ctn.begin();
+	typename Container::const_iterator ite = ctn.end();
+	if (it == ite)
+		std::cout << " empty !" << std::endl;
 	while (it != ite)
 	{
 		std::cout << *it;

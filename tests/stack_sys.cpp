@@ -1,51 +1,74 @@
-#ifndef STACK_SYS_HPP
-# define STACK_SYS_HPP
-
+#ifndef STACK_SYS_CPP
+# define STACK_SYS_CPP
+# include "utils.cpp"
 # include <stack>
 # include <deque>
-# include <iostream>
-# include "utils.cpp"
+# include <vector>
 
 void	stack_sys(void)
 {
-	std::cout << "\n---basic\n\n";
-
-	std::stack<int> empty_stack;
 	{
-		std::cout << "empty? " << empty_stack.empty() << '\n';
-		std::cout << "empty stack size = " << empty_stack.size() << '\n';
-			assert(empty_stack.empty());
-			assert(empty_stack.size() == 0);
+		print_banner("Constructors");
+		std::deque<int> mydeque (3,100);          // deque with 3 elements
+		std::vector<int> myvector (2,200);        // vector with 2 elements
+
+		std::stack<int> first;                    // empty stack
+		std::stack<int, std::deque<int> > second (mydeque);         // stack initialized to copy of deque
+
+		std::stack<int, std::vector<int> > third;  // empty stack using vector
+		std::stack<int, std::vector<int> > fourth (myvector);
+
+		std::cout << "size of first: " << first.size() << '\n';
+		std::cout << "size of second: " << second.size() << '\n';
+		std::cout << "size of third: " << third.size() << '\n';
+		std::cout << "size of fourth: " << fourth.size() << '\n';
+	}
+	{
+		print_banner("Push, empty, top and pop functions");
+		std::stack<int> mystack;
+		int sum (0);
+
+		for (int i=1;i<=10;i++) mystack.push(i);
+
+		while (!mystack.empty())
+		{
+			sum += mystack.top();
+			mystack.pop();
+		}
+
+		std::cout << "total: " << sum << '\n';
+	}
+	{
+		print_banner("Size, top and pop functions extends");
+		std::stack<int> stk;
+		std::cout << "[] (size: " << stk.size() << ")\n";
+			assert(stk.size() == 0);
+		stk.push(5);
+		std::cout << "[5].top() = " << stk.top() << " (size: " << stk.size() << ", empty? " << stk.empty() << ")\n";
+			assert(stk.top() == 5);
+			assert(stk.size() == 1);
+		stk.push(42);
+		std::cout << "[5, 42].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
+			assert(stk.top() == 42);
+
+		std::cout << "stack [5, 42].size() = " << stk.size() << '\n';
+			assert(stk.size() == 2);
+
+		stk.top() = 99;
+		std::cout << "[5, 99].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
+			assert(stk.top() == 99);
+			assert(stk.size() == 2);
+		stk.pop();
+		std::cout << "[5].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
+			assert(stk.top() == 5);
+			assert(stk.size() == 1);
+		stk.pop();
+		std::cout << "[] (size: " << stk.size() << ")\n";
+			assert(stk.size() == 0);
 	}
 
-	std::stack<int> stk;
-	std::cout << "[] (size: " << stk.size() << ")\n";
-		assert(stk.size() == 0);
-	stk.push(5);
-	std::cout << "[5].top() = " << stk.top() << " (size: " << stk.size() << ", empty? " << stk.empty() << ")\n";
-		assert(stk.top() == 5);
-		assert(stk.size() == 1);
-	stk.push(42);
-	std::cout << "[5, 42].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
-		assert(stk.top() == 42);
-
-	std::cout << "stack [5, 42].size() = " << stk.size() << '\n';
-		assert(stk.size() == 2);
-
-	stk.top() = 99;
-	std::cout << "[5, 99].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
-		assert(stk.top() == 99);
-		assert(stk.size() == 2);
-	stk.pop();
-	std::cout << "[5].top() = " << stk.top() << " (size: " << stk.size() << ")\n";
-		assert(stk.top() == 5);
-		assert(stk.size() == 1);
-	stk.pop();
-	std::cout << "[] (size: " << stk.size() << ")\n";
-		assert(stk.size() == 0);
-
-	std::cout << "\n---with container\n\n";
 	{
+		std::cout << "\n---with deque container\n\n";
 		std::deque<int> ctn;
 		ctn.push_back(5);
 		ctn.push_back(42);
@@ -54,7 +77,7 @@ void	stack_sys(void)
 		display_container("[5, 42, 43, 99] {List or Deque}:", ctn);
 			assert(ctn.size() == 4);
 
-		std::stack<int> stk(ctn);
+		std::stack<int, std::deque<int> > stk(ctn);
 		std::cout << "stack empty? " << stk.empty() << '\n';
 		std::cout << "stack size = " << stk.size() << '\n';
 			assert(!stk.empty());
@@ -79,11 +102,11 @@ void	stack_sys(void)
 		std::cout << "[] (size: " << stk.size() << ")\n";
 			assert(stk.size() == 0);
 
-		display_container("[5, 42, 43, 99] {std::List after, no change}:", ctn);
+		display_container("[5, 42, 43, 99] {List after, no change}:", ctn);
 	}
 
-	std::cout << "\n---comparison\n\n";
 	{
+		print_banner("Relational operators");
 		std::stack<int> stk;
 		stk.push(5);
 		stk.push(42);
@@ -147,9 +170,9 @@ void	stack_sys(void)
 		assert(stk4 > stk);
 		assert(!(stk4 <= stk));
 		assert(stk4 >= stk);
+		std::cout << '\n';
 	}
 
-	std::cout << '\n';
 }
 
 #endif

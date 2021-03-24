@@ -1,15 +1,37 @@
-#ifndef LIST_SYS_HPP
-# define LIST_SYS_HPP
+#ifndef LIST_SYS_CPP
+# define LIST_SYS_CPP
 
-# include <list>
-# include <iostream>
 # include "utils.cpp"
-
+# include <list>
 
 void	list_sys(void)
 {
-	std::cout << "\n---basic\n\n";
 	{
+		print_banner("Constructors");
+		// constructors used in the same order as described above:
+		std::list<int> first;                                // empty list of ints
+		std::list<int> second (4,100);                       // four ints with value 100
+		std::list<int> third (second.begin(),second.end());  // iterating through second
+		std::list<int> fourth (third);                       // a copy of third
+
+		display_container("The contents of first are: ", first);
+		display_container("The contents of second are: ", second);
+		display_container("The contents of third are: ", third);
+		display_container("The contents of fourth are: ", fourth);
+	}
+	{
+		print_banner("operator=");
+		std::list<int> first (3);      // list of 3 zero-initialized ints
+		std::list<int> second (5);     // list of 5 zero-initialized ints
+
+		second = first;
+		first = std::list<int>();
+
+		std::cout << "Size of first: " << int (first.size()) << '\n';
+		std::cout << "Size of second: " << int (second.size()) << '\n';
+	}
+	{
+		print_banner("Iterators, empty, size, max_size, front and back");
 		std::list<int> empty_list;
 		{
 			std::cout << "[begin] == [end] on empty list" << '\n';
@@ -20,7 +42,6 @@ void	list_sys(void)
 			std::cout << "empty list size = " << empty_list.size() << '\n';
 				assert(empty_list.size() == 0);
 		}
-
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -35,9 +56,66 @@ void	list_sys(void)
 				assert(*--lst.end() == 42);
 		}
 	}
-
-	std::cout << "\n---push_back\n\n";
 	{
+		print_banner("Modifiers functions: assign");
+		std::list<int> lst;
+			assert(lst.size() == 0);
+
+		lst.assign(5, 42);
+		display_container("[42, 42, 42, 42, 42]:", lst);
+			assert(lst.size() == 5);
+
+		std::list<int> lst2;
+		lst2.assign(5, 43);
+		display_container("lst2[43, 43, 43, 43, 43]:", lst2);
+			assert(lst2.size() == 5);
+		lst.assign(lst2.begin(), lst2.end());
+		display_container("lst [43, 43, 43, 43, 43]:", lst);
+			assert(lst.size() == 5);
+
+		lst2.assign(5, 44);
+		display_container("lst[43, 43, 43, 43, 43]:", lst);
+			assert(lst.size() == 5);
+		display_container("lst2[44, 44, 44, 44, 44]:", lst2);
+			assert(lst2.size() == 5);
+	}
+	{
+		print_banner("Modifiers functions: push_front and pop_front");
+		std::list<int> lst;
+		lst.push_front(3);
+		lst.push_front(42);
+		lst.push_front(5);
+
+		display_container("[5, 42, 3]:", lst);
+			assert(lst.size() == 3);
+
+		std::list<int>::reverse_iterator rit = lst.rbegin();
+		std::list<int>::reverse_iterator rite = lst.rend();
+		int i = 1;
+		std::cout << "(reverse) [5, 42, 3]:" << '\n';
+		while (rit != rite)
+			std::cout << i++ << " -> " << *rit++ << '\n';
+
+		std::list<int>::iterator it;
+		std::list<int>::iterator ite;
+		std::cout << "pop_front from [5, 42, 3]:" << '\n';
+		for (size_t i = 0; i < 3; i++) {
+			lst.pop_front();
+			it = lst.begin();
+			ite = lst.end();
+			if (i == 0) std::cout << "[42, 3]:" << '\n';
+			else if (i == 1) std::cout << "[3]:" << '\n';
+			else {
+				std::cout << "[]:" << '\n';
+				break ;
+			}
+			while (it != ite)
+				std::cout << *it++ << ", ";
+			std::cout << '\n';
+		}
+	}
+	{
+		print_banner("Modifiers functions: push_back and pop_back");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -72,113 +150,8 @@ void	list_sys(void)
 			std::cout << '\n';
 		}
 	}
-
-	std::cout << "\n---push_front\n\n";
 	{
-		std::list<int> lst;
-		lst.push_front(3);
-		lst.push_front(42);
-		lst.push_front(5);
-
-		display_container("[5, 42, 3]:", lst);
-			assert(lst.size() == 3);
-
-		std::list<int>::reverse_iterator rit = lst.rbegin();
-		std::list<int>::reverse_iterator rite = lst.rend();
-		int i = 1;
-		std::cout << "(reverse) [5, 42, 3]:" << '\n';
-		while (rit != rite)
-			std::cout << i++ << " -> " << *rit++ << '\n';
-
-		std::list<int>::iterator it;
-		std::list<int>::iterator ite;
-		std::cout << "pop_front from [5, 42, 3]:" << '\n';
-		for (size_t i = 0; i < 3; i++) {
-			lst.pop_front();
-			it = lst.begin();
-			ite = lst.end();
-			if (i == 0) std::cout << "[42, 3]:" << '\n';
-			else if (i == 1) std::cout << "[3]:" << '\n';
-			else {
-				std::cout << "[]:" << '\n';
-				break ;
-			}
-			while (it != ite)
-				std::cout << *it++ << ", ";
-			std::cout << '\n';
-		}
-	}
-
-	std::cout << "\n---clear\n\n";
-	{
-		std::list<int> lst;
-		lst.push_back(5);
-		lst.push_back(42);
-		lst.push_back(3);
-
-		display_container("[5, 42, 3]:", lst);
-			assert(lst.size() == 3);
-
-		std::list<int> lst2(lst);
-		lst.clear();
-			assert(lst.size() == 0);
-			assert(lst2.size() == 3);
-
-		display_container("cleared list []:", lst);
-			assert(lst.size() == 0);
-
-		display_container("copied list before clear [5, 42, 3]:", lst2);
-			assert(lst2.size() == 3);
-	}
-
-	std::cout << "\n---erase\n\n";
-	{
-		std::list<int> lst;
-		lst.push_back(5);
-		lst.push_back(42);
-		lst.push_back(3);
-			assert(lst.size() == 3);
-
-		display_container("[5, 42, 3]:", lst);
-		std::cout << "[3] -> " << *lst.erase(++lst.begin()) << '\n';
-		display_container("42 deleted [5, 3]:", lst);
-			assert(lst.size() == 2);
-
-		std::list<int>::iterator it = lst.erase(--lst.end());
-		std::cout << "deleted [end] -> ";
-			assert(it == lst.end());
-
-		it = lst.erase(lst.begin());
-		std::cout << "deleted [begin] -> ";
-			assert(it == lst.end());
-	}
-
-	std::cout << "\n---assign\n\n";
-	{
-		std::list<int> lst;
-			assert(lst.size() == 0);
-
-		lst.assign(5, 42);
-		display_container("[42, 42, 42, 42, 42]:", lst);
-			assert(lst.size() == 5);
-
-		std::list<int> lst2;
-		lst2.assign(5, 43);
-		display_container("lst2[43, 43, 43, 43, 43]:", lst2);
-			assert(lst2.size() == 5);
-		lst.assign(lst2.begin(), lst2.end());
-		display_container("lst [43, 43, 43, 43, 43]:", lst);
-			assert(lst.size() == 5);
-
-		lst2.assign(5, 44);
-		display_container("lst[43, 43, 43, 43, 43]:", lst);
-			assert(lst.size() == 5);
-		display_container("lst2[44, 44, 44, 44, 44]:", lst2);
-			assert(lst2.size() == 5);
-	}
-
-	std::cout << "\n---insert\n\n";
-	{
+		print_banner("Modifiers functions: insert");
 		std::list<int> lst;
 			assert(lst.size() == 0);
 
@@ -201,9 +174,126 @@ void	list_sys(void)
 		display_container("lst to lst2[42, 42, 5, 42, 42, 5]:", lst2);
 			assert(lst2.size() == 6);
 	}
-
-	std::cout << "\n---remove\n\n";
 	{
+		print_banner("Modifiers functions: erase");
+		std::list<int> lst;
+		lst.push_back(5);
+		lst.push_back(42);
+		lst.push_back(3);
+			assert(lst.size() == 3);
+
+		display_container("[5, 42, 3]:", lst);
+		std::cout << "[3] -> " << *lst.erase(++lst.begin()) << '\n';
+		display_container("42 deleted [5, 3]:", lst);
+			assert(lst.size() == 2);
+
+		std::list<int>::iterator it = lst.erase(--lst.end());
+		std::cout << "deleted [end] -> ";
+			assert(it == lst.end());
+
+		it = lst.erase(lst.begin());
+		std::cout << "deleted [begin] -> ";
+			assert(it == lst.end());
+	}
+	{
+		print_banner("Modifiers functions: swap");
+		std::list<int> first (3,100);   // three ints with a value of 100
+		std::list<int> second (5,200);  // five ints with a value of 200
+
+		first.swap(second);
+
+		std::cout << "first contains:";
+		for (std::list<int>::iterator it=first.begin(); it!=first.end(); it++)
+			std::cout << ' ' << *it;
+		std::cout << '\n';
+
+		std::cout << "second contains:";
+		for (std::list<int>::iterator it=second.begin(); it!=second.end(); it++)
+			std::cout << ' ' << *it;
+		std::cout << '\n';
+	}
+	{
+		print_banner("Modifiers functions: resize");
+		std::list<int> lst;
+		lst.push_back(5);
+		lst.push_back(42);
+
+		display_container("[5, 42]:", lst);
+			assert(lst.size() == 2);
+
+		lst.resize(5, 43);
+		display_container("[5, 42, 43, 43, 43]:", lst);
+			assert(lst.size() == 5);
+
+		lst.resize(1);
+		display_container("[5]:", lst);
+			assert(lst.size() == 1);
+
+		lst.resize(0);
+		display_container("[]:", lst);
+			assert(lst.size() == 0);
+
+		lst.resize(5);
+		display_container("[0, 0, 0, 0, 0]:", lst);
+			assert(lst.size() == 5);
+	}
+	{
+		print_banner("Modifiers functions: clear");
+		std::list<int> lst;
+		lst.push_back(5);
+		lst.push_back(42);
+		lst.push_back(3);
+
+		display_container("[5, 42, 3]:", lst);
+			assert(lst.size() == 3);
+
+		std::list<int> lst2(lst);
+		lst.clear();
+			assert(lst.size() == 0);
+			assert(lst2.size() == 3);
+
+		display_container("cleared list []:", lst);
+			assert(lst.size() == 0);
+
+		display_container("copied list before clear [5, 42, 3]:", lst2);
+			assert(lst2.size() == 3);
+	}
+	{
+		print_banner("Operation functions: splice");
+		std::list<int> lst;
+		lst.push_back(5);
+		lst.push_back(42);
+
+		std::list<int> lst2;
+		lst2.push_back(43);
+		lst2.push_back(45);
+		lst2.push_back(58);
+
+		display_container("[5, 42]:", lst);
+			assert(lst.size() == 2);
+		display_container("[43, 45, 58]:", lst2);
+			assert(lst2.size() == 3);
+
+		lst.splice(lst.begin(), lst2, lst2.begin());
+		display_container("[43, 5, 42] {spliced first element of lst2 at begin}:", lst);
+			assert(lst.size() == 3);
+		display_container("[45, 58] {first element removed}:", lst2);
+			assert(lst2.size() == 2);
+
+		lst.splice(lst.end(), lst2, lst2.begin(), lst2.end());
+		display_container("[43, 5, 42, 45, 58] {splice everything at end}:", lst);
+			assert(lst.size() == 5);
+		display_container("[] {empty}:", lst2);
+			assert(lst2.size() == 0);
+
+		lst2.splice(lst2.begin(), lst);
+		display_container("[] {empty now}:", lst);
+			assert(lst.size() == 0);
+		display_container("[43, 5, 42, 45, 58] {spliced content of lst}:", lst2);
+			assert(lst2.size() == 5);
+	}
+	{
+		print_banner("Operation functions: remove");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -240,9 +330,8 @@ void	list_sys(void)
 		display_container("[44] delete {44}:", lst);
 			assert(lst.size() == 0);
 	}
-
-	std::cout << "\n---remove_if\n\n";
 	{
+		print_banner("Operation functions: remove_if");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -267,9 +356,8 @@ void	list_sys(void)
 		display_container("[] delete {<99}:", lst);
 			assert(lst.size() == 0);
 	}
-
-	std::cout << "\n---unique\n\n";
 	{
+		print_banner("Operation functions: unique");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(5);
@@ -301,9 +389,8 @@ void	list_sys(void)
 		display_container("[5, 42, 44, 5, 45] {unique}:", lst);
 			assert(lst.size() == 5);
 	}
-
-	std::cout << "\n---unique (binary pred)\n\n";
 	{
+		print_banner("Operation functions: unique (binary pred)");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(5);
@@ -347,9 +434,8 @@ void	list_sys(void)
 				assert(lst.size() == 6);
 		}
 	}
-
-	std::cout << "\n---unique (binary pred again)\n\n";
 	{
+		print_banner("Operation functions: unique (binary pred again)");
 		std::list<int> lst;
 		lst.push_back(1);
 		lst.push_back(2);
@@ -366,9 +452,8 @@ void	list_sys(void)
 		display_container("[1, 1, 3, 2, 6] {equal_plus_one}:", lst);
 			assert(lst.size() == 5);
 	}
-
-	std::cout << "\n---merge\n\n";
 	{
+		print_banner("Operation functions: merge");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -397,9 +482,8 @@ void	list_sys(void)
 		display_container("empty lst2 after merge []:", lst2);
 			assert(lst2.size() == 0);
 	}
-
-	std::cout << "\n---merge (comp)\n\n";
 	{
+		print_banner("Operation functions: merge (comp)");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -429,9 +513,8 @@ void	list_sys(void)
 		display_container("empty lst2 after merge []:", lst2);
 			assert(lst2.size() == 0);
 	}
-
-	std::cout << "\n---sort\n\n";
 	{
+		print_banner("Operation functions: sort");
 		std::list<int> lst;
 		lst.push_back(44);
 		lst.push_back(58);
@@ -452,9 +535,8 @@ void	list_sys(void)
 		display_container("[5, 42, 42, 43, 43, 44, 58] {sorted: no change}:", lst);
 			assert(lst.size() == 7);
 	}
-
-	std::cout << "\n---sort (comp)\n\n";
 	{
+		print_banner("Operation functions: sort (comp)");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -475,9 +557,8 @@ void	list_sys(void)
 		display_container("[58, 44, 43, 43, 42, 42, 5] {sorted desc: no change}:", lst);
 			assert(lst.size() == 7);
 	}
-
-	std::cout << "\n---reverse\n\n";
 	{
+		print_banner("Operation functions: reverse");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -511,70 +592,8 @@ void	list_sys(void)
 		display_container("[5, 42] {reversed twice}:", lst2);
 			assert(lst2.size() == 2);
 	}
-
-	std::cout << "\n---resize\n\n";
 	{
-		std::list<int> lst;
-		lst.push_back(5);
-		lst.push_back(42);
-
-		display_container("[5, 42]:", lst);
-			assert(lst.size() == 2);
-
-		lst.resize(5, 43);
-		display_container("[5, 42, 43, 43, 43]:", lst);
-			assert(lst.size() == 5);
-
-		lst.resize(1);
-		display_container("[5]:", lst);
-			assert(lst.size() == 1);
-
-		lst.resize(0);
-		display_container("[]:", lst);
-			assert(lst.size() == 0);
-
-		lst.resize(5);
-		display_container("[0, 0, 0, 0, 0]:", lst);
-			assert(lst.size() == 5);
-	}
-
-	std::cout << "\n---splice\n\n";
-	{
-		std::list<int> lst;
-		lst.push_back(5);
-		lst.push_back(42);
-
-		std::list<int> lst2;
-		lst2.push_back(43);
-		lst2.push_back(45);
-		lst2.push_back(58);
-
-		display_container("[5, 42]:", lst);
-			assert(lst.size() == 2);
-		display_container("[43, 45, 58]:", lst2);
-			assert(lst2.size() == 3);
-
-		lst.splice(lst.begin(), lst2, lst2.begin());
-		display_container("[43, 5, 42] {spliced first element of lst2 at begin}:", lst);
-			assert(lst.size() == 3);
-		display_container("[45, 58] {first element removed}:", lst2);
-			assert(lst2.size() == 2);
-
-		lst.splice(lst.end(), lst2, lst2.begin(), lst2.end());
-		display_container("[43, 5, 42, 45, 58] {splice everything at end}:", lst);
-			assert(lst.size() == 5);
-		display_container("[] {empty}:", lst2);
-			assert(lst2.size() == 0);
-
-		lst2.splice(lst2.begin(), lst);
-		display_container("[] {empty now}:", lst);
-			assert(lst.size() == 0);
-		display_container("[43, 5, 42, 45, 58] {spliced content of lst}:", lst2);
-			assert(lst2.size() == 5);
-	}
-
-	std::cout << "\n---comparison\n\n";
-	{
+		print_banner("Non-member function overloads: relational operators");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -640,8 +659,8 @@ void	list_sys(void)
 		assert(lst4 >= lst);
 	}
 
-	std::cout << "\n---swap\n\n";
 	{
+		print_banner("Non-member function overloads: swap");
 		std::list<int> lst;
 		lst.push_back(5);
 		lst.push_back(42);
@@ -662,7 +681,7 @@ void	list_sys(void)
             assert(*++lst2.begin() == 30);
             assert(lst2.back() == 60);
             assert(lst2.size() == 3);
-		lst.swap(lst2);
+		std::swap(lst, lst2);
 		std::cout << "---swapped\n";
 		display_container("[12, 30, 60]:", lst);
             assert(lst.front() == 12);
@@ -674,7 +693,7 @@ void	list_sys(void)
             assert(*++lst2.begin() == 42);
             assert(lst2.back() == 43);
             assert(lst2.size() == 3);
-		lst.swap(lst2);
+		std::swap(lst, lst2);
 		std::cout << "---swapped\n";
 		display_container("[5, 42, 43]:", lst);
             assert(lst.front() == 5);
@@ -686,8 +705,8 @@ void	list_sys(void)
             assert(*++lst2.begin() == 30);
             assert(lst2.back() == 60);
             assert(lst2.size() == 3);
+		std::cout << '\n';
 	}
-	std::cout << '\n';
 }
 
 #endif

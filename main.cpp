@@ -8,6 +8,12 @@
 #include "tests/vector_sys.cpp"
 #include "tests/map_test.cpp"
 #include "tests/map_sys.cpp"
+#include "tests/multimap_test.cpp"
+#include "tests/multimap_sys.cpp"
+#include "tests/set_sys.cpp"
+#include "tests/set_test.cpp"
+#include "tests/multiset_sys.cpp"
+#include "tests/multiset_test.cpp"
 
 int main(int argc, char **argv)
 {
@@ -32,7 +38,19 @@ int main(int argc, char **argv)
         map_test();
     else if (!strcmp(argv[1], "map_sys"))
         map_sys();
+    else if (!strcmp(argv[1], "multimap_test"))
+        multimap_test();
+    else if (!strcmp(argv[1], "multimap_sys"))
+        multimap_sys();
+    else if (!strcmp(argv[1], "set_test"))
+        set_test();
+    else if (!strcmp(argv[1], "set_sys"))
+        set_sys();
+    else if (!strcmp(argv[1], "multiset_test"))
+        multiset_test();
+    else if (!strcmp(argv[1], "multiset_sys"))
+        multiset_sys();
     else
-        std::cout << "Usage ./ft_containers <all | list | queue | stack | vector | map>" << std::endl;
+        std::cout << "Usage ./ft_containers <all | list | queue | stack | vector | map | multimap>" << std::endl;
     return (0);
 }
